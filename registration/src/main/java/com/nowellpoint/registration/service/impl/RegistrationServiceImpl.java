@@ -1,37 +1,33 @@
 package com.nowellpoint.registration.service.impl;
 
-import java.net.URI;
 import java.time.Instant;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
 import javax.ws.rs.NotFoundException;
-import javax.ws.rs.core.UriBuilder;
 
 import org.bson.types.ObjectId;
 import org.jboss.logging.Logger;
 import org.mongodb.morphia.query.Query;
 
-import com.nowellpoint.api.RegistrationResource;
 import com.nowellpoint.api.model.RegistrationRequest;
-import com.nowellpoint.api.model.UpdateRegistrationRequest;
-import com.nowellpoint.registration.entity.Plan;
+import com.nowellpoint.api.model.ServiceException;
+import com.nowellpoint.registration.entity.PlanDocument;
 import com.nowellpoint.registration.entity.RegistrationDAO;
 import com.nowellpoint.registration.entity.RegistrationDocument;
 import com.nowellpoint.registration.entity.UserProfile;
-import com.nowellpoint.registration.provider.DatastoreProvider;
-import com.nowellpoint.registration.service.RegistrationService;
-import com.nowellpoint.registration.util.MessageProvider;
 import com.nowellpoint.registration.model.ModifiableRegistration;
 import com.nowellpoint.registration.model.ModifiableUserInfo;
 import com.nowellpoint.registration.model.Registration;
 import com.nowellpoint.registration.model.UserInfo;
+import com.nowellpoint.registration.provider.DatastoreProvider;
+import com.nowellpoint.registration.service.RegistrationService;
+import com.nowellpoint.registration.util.MessageProvider;
 import com.nowellpoint.util.Assert;
-import com.nowellpoint.util.Properties;
 
 public class RegistrationServiceImpl extends AbstractService implements RegistrationService {
 	
@@ -58,7 +54,7 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 			try {
 				entity = dao.get(new ObjectId(id));
 			} catch (IllegalArgumentException e) {
-				throw new IllegalArgumentException(String.format(MessageProvider.getMessage(Locale.getDefault(), MessageProvider.INVALID_VALUE_FOR_ID), id));
+				throw new ServiceException(400, "INVALID_VALUE", String.format(MessageProvider.getMessage(Locale.getDefault(), MessageProvider.INVALID_VALUE_FOR_ID), id));
 			}
 		}
 		if (Assert.isNull(entity)) {
@@ -70,10 +66,10 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	@Override
 	public Registration register(RegistrationRequest request) {
 		
-		Optional<Plan> query = getPlan(request.getPlan());
+		Optional<PlanDocument> query = getPlan(request.getPlan());
 		
 		if (! query.isPresent()) {
-			throw new IllegalArgumentException(String.format(MessageProvider.getInvalidPlan(Locale.getDefault()), request.getPlan()));
+			throw new ServiceException(400, "INVALID_VALUE", String.format(MessageProvider.getInvalidPlan(Locale.getDefault()), request.getPlan()));
 		}
 
 		//isRegistred(request.getEmail(), request.getDomain());
@@ -83,92 +79,86 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		 */
 		
 		UserInfo userInfo = getSystemAdmin();
-		
-		Date now = getCurrentDate();
 
-		Registration registration = Registration.builder()
+		Registration instance = Registration.builder()
 				.countryCode(request.getCountryCode())
+				.createdBy(userInfo)
+				.domain(request.getDomain())
 				.email(request.getEmail())
-				.phone(request.getPhone())
 				.firstName(request.getFirstName())
 				.lastName(request.getLastName())
-				.verified(Boolean.FALSE)
-				.plan(query.get().getPlanCode())
-				.createdBy(userInfo)
-				.createdOn(now)
 				.lastUpdatedBy(userInfo)
-				.lastUpdatedOn(now)
-				.domain(Assert.isNotNullOrEmpty(request.getDomain()) ? request.getDomain() : null)
-				.expiresAt(Instant.now().plusSeconds(1209600).toEpochMilli())
+				.plan(query.get().getPlanCode())
+				.phone(request.getPhone())
 				.build();
 
 		/**
 		 * 
 		 */
 		
-		RegistrationDocument entity = modelMapper.map(registration, RegistrationDocument.class);
-		
-		dao.save(entity);
-		
-		set(entity.getId().toString(), entity);
-		
-		registration = modelMapper.map(entity, ModifiableRegistration.class).toImmutable();
+		save(instance);
 
-		if (Assert.isNotNullOrEmpty(registration.getDomain())) {
-			registrationEvent.fire(registration);
-		}
+		registrationEvent.fire(instance);
 
-		return registration;
+		return instance;
 	}
 	
 	@Override
-	public Registration updateRegistration(String id, UpdateRegistrationRequest request) {
-		
-		//if (Assert.isNullOrEmpty(domain)) {
-		//	throw new ValidationException(MessageProvider.getMessage(Locale.getDefault(), MessageConstants.REGISTRATION_MISSING_DOMAIN));
-		//}
+	public Registration updateRegistration(String id, RegistrationRequest request) {
 		
 		Registration registration = findById(id);
 		
-		isExpired(registration.getExpiresAt());
-		
-		URI emailVerificationTokenUri = UriBuilder.fromUri(System.getProperty(Properties.API_HOSTNAME)) 
-				.path(RegistrationResource.class)
-				.path("verify-email")
-				.path("{emailVerificationToken}")
-				.build(registration.getEmailVerificationToken());
-		
-		logger.info(emailVerificationTokenUri);
-		
-		UserInfo userInfo = getSystemAdmin();
-		
-		Date now = getCurrentDate();
-		
-		Optional<Plan> query = Optional.empty();
-		if (Assert.isNotNullOrEmpty(request.getPlan())) {
-			query = getPlan(request.getPlan());
+		if (checkExpired(registration.getExpiresAt())) {
+			
+			Registration instance = Registration.builder()
+					.from(registration)
+					.domain(UUID.randomUUID().toString())
+					.lastUpdatedOn(getCurrentDate())
+					.lastUpdatedBy(getSystemAdmin())
+					.build();
+			
+			save(instance);
+			
+			throw new ServiceException(422, "EXPIRED", MessageProvider.getInvalidOrExpiredRegistration(Locale.getDefault()));
+			
+		} else {
+						
+			Optional<PlanDocument> query = getPlan(Assert.isNotNullOrEmpty(request.getPlan()) ? 
+					request.getPlan() : 
+						registration.getPlan());
+			
+			if (query.isPresent() == Boolean.FALSE) {
+				throw new ServiceException(400, "INVALID_VALUE", String.format(MessageProvider.getInvalidPlan(Locale.getDefault()), request.getPlan()));
+			}
+			
+			String domain = Assert.isNotNullOrEmpty(request.getDomain()) ? request.getDomain() : registration.getDomain();
+			String countryCode = Assert.isNotNullOrEmpty(request.getCountryCode()) ? request.getCountryCode() : registration.getCountryCode();
+			String email = Assert.isNotNullOrEmpty(request.getEmail()) ? request.getEmail() : registration.getEmail();
+			String lastName = Assert.isNotNullOrEmpty(request.getLastName()) ? request.getLastName() : registration.getLastName();
+			Boolean verified = Assert.isNotEqual(request.getEmail(), registration.getEmail());
+			
+			Registration instance = Registration.builder()
+					.from(registration)
+					.countryCode(countryCode)
+					.domain(domain)
+					.email(email)
+					.lastUpdatedOn(getCurrentDate())
+					.lastUpdatedBy(getSystemAdmin())
+					.firstName(request.getFirstName())
+					.lastName(lastName)
+					.plan(query.get().getPlanCode()) 
+					.phone(request.getPhone())
+					.verified(verified)
+					.build();
+			
+			save(instance);
+			
+			if (!instance.getVerified()) {
+				registrationEvent.fire(instance);
+			}
+			
+			return instance;
 		}
-		
-		Registration instance = Registration.builder()
-				.from(registration)
-				.domain(request.getDomain())
-				.emailVerificationHref(emailVerificationTokenUri)
-				.lastUpdatedOn(now)
-				.lastUpdatedBy(userInfo)
-				.plan(query.isPresent() ? query.get().getPlanCode() : registration.getPlan()) 
-				.build();
-		
-		/**
-		 * 
-		 */
-		
-		RegistrationDocument entity = modelMapper.map(registration, RegistrationDocument.class);
-		
-		dao.save(entity);
-		
-		registrationEvent.fire(registration);
-		
-		return instance;
 	}
 	
 	@Override
@@ -284,10 +274,15 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 //		}
 	}
 	
-	private void isExpired(Long expiresAt) {
-//		if (Instant.ofEpochMilli(expiresAt).isBefore(Instant.now())) {
-//			throw new ValidationException(MessageProvider.getMessage(Locale.getDefault(), MessageConstants.REGISTRATION_INVALID_OR_EXPIRED));
-//		}
+	private void save(Registration registration) {
+		RegistrationDocument entity = modelMapper.map(registration, RegistrationDocument.class);
+		dao.save(entity);
+		set(entity.getId().toString(), entity);
+		registration = modelMapper.map(entity, ModifiableRegistration.class).toImmutable();
+	}
+	
+	private Boolean checkExpired(Long expiresAt) {
+		return Instant.ofEpochMilli(expiresAt).isBefore(Instant.now());
 	}
 	
 	//private UserProfile createUserProfile(String firstName, String lastName, String email, String phone, String countryCode, Organization organization) {
@@ -321,14 +316,6 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 //				cvv);
 //	}
 	
-	/*private Plan findPlanById(String planId) {
-		try {
-    		return planService.findById(planId);
-    	} catch (DocumentNotFoundException ignore) {
-    		throw new ValidationException(String.format(MessageProvider.getMessage(Locale.getDefault(), MessageConstants.REGISTRATION_INVALID_PLAN), planId));
-		}
-	}*/
-	
 	private void isRegistred(String username, String domain) {
 //		try {
 //			userProfileService.findByUsername(username);
@@ -354,9 +341,9 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		return modelMapper.map(userProfile, ModifiableUserInfo.class).toImmutable();
 	}
 	
-	private Optional<Plan> getPlan(String plan) {
-		Query<Plan> query = datastoreProvider.getDatastore()
-				.createQuery(Plan.class)
+	private Optional<PlanDocument> getPlan(String plan) {
+		Query<PlanDocument> query = datastoreProvider.getDatastore()
+				.createQuery(PlanDocument.class)
 				.field("planCode")
 				.equal(plan);
 		

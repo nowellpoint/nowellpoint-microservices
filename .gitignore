@@ -1,3 +1,9 @@
+audit.log
+.settings/*
+.classpath
+.factorypath
+.project
+
 *.class
   
 # Package Files #

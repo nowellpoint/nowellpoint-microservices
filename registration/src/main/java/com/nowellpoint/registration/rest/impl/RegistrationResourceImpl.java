@@ -10,7 +10,6 @@ import org.jboss.logging.Logger;
 
 import com.nowellpoint.api.RegistrationResource;
 import com.nowellpoint.api.model.RegistrationRequest;
-import com.nowellpoint.api.model.UpdateRegistrationRequest;
 import com.nowellpoint.registration.service.RegistrationService;
 import com.nowellpoint.registration.model.Registration;
 
@@ -46,7 +45,7 @@ public class RegistrationResourceImpl implements RegistrationResource {
 	}
 	
 	@Override
-	public Response updateRegistration(String id, UpdateRegistrationRequest request) {
+	public Response updateRegistration(String id, RegistrationRequest request) {
 		Registration registration = registrationService.updateRegistration(id, request);
 		return Response.ok(registration)
 				.build();

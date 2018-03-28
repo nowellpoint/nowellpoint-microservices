@@ -1,11 +1,20 @@
 package com.nowellpoint.registration.entity;
 
-import java.net.URI;
-
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
+import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.IndexOptions;
+import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Reference;
 
 @Entity(value = "registrations", noClassnameStored = true)
+@Indexes({
+    @Index(
+        options = @IndexOptions(unique = true),
+        fields = {
+            @Field(value = "domain")
+        })
+})
 public class RegistrationDocument extends BaseEntity {
 	
 	private String firstName;
@@ -21,8 +30,6 @@ public class RegistrationDocument extends BaseEntity {
 	private String emailVerificationToken;
 	
 	private String domain;
-	
-	private URI emailVerificationHref;
 	
 	private Long expiresAt;
 	
@@ -96,14 +103,6 @@ public class RegistrationDocument extends BaseEntity {
 
 	public void setDomain(String domain) {
 		this.domain = domain;
-	}
-
-	public URI getEmailVerificationHref() {
-		return emailVerificationHref;
-	}
-
-	public void setEmailVerificationHref(URI emailVerificationHref) {
-		this.emailVerificationHref = emailVerificationHref;
 	}
 
 	public Long getExpiresAt() {

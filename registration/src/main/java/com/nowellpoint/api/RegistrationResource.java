@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.nowellpoint.api.model.RegistrationRequest;
-import com.nowellpoint.api.model.UpdateRegistrationRequest;
 
 @Path("/registrations")
 public interface RegistrationResource {
@@ -47,7 +46,7 @@ public interface RegistrationResource {
 	@Path("{id}")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-    public Response updateRegistration(@PathParam("id") String id, UpdateRegistrationRequest request);
+    public Response updateRegistration(@PathParam("id") String id, RegistrationRequest request);
 	
 	@PermitAll
 	@POST

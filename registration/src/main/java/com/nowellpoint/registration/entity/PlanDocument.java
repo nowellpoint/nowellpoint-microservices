@@ -3,7 +3,7 @@ package com.nowellpoint.registration.entity;
 import org.mongodb.morphia.annotations.Entity;
 
 @Entity(value = "plans")
-public class Plan extends BaseEntity {
+public class PlanDocument extends BaseEntity {
 	
 	private Boolean recommendedPlan;
 	
@@ -19,7 +19,7 @@ public class Plan extends BaseEntity {
 	
 	private Boolean isActive;
 	
-	public Plan() {
+	public PlanDocument() {
 		
 	}
 
