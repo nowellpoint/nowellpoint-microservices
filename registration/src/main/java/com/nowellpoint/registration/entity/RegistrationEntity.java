@@ -15,7 +15,7 @@ import org.mongodb.morphia.annotations.Reference;
             @Field(value = "domain")
         })
 })
-public class RegistrationDocument extends BaseEntity {
+public class RegistrationEntity extends BaseEntity {
 	
 	private String firstName;
 	
@@ -38,14 +38,14 @@ public class RegistrationDocument extends BaseEntity {
 	private String identityHref;
 	
 	@Reference
-	private UserProfile createdBy;
+	private UserProfileEntity createdBy;
 	
 	@Reference
-	private UserProfile lastUpdatedBy;
+	private UserProfileEntity lastUpdatedBy;
 	
 	private Boolean verified;
 	
-	public RegistrationDocument() {
+	public RegistrationEntity() {
 		
 	}
 
@@ -137,19 +137,19 @@ public class RegistrationDocument extends BaseEntity {
 		this.verified = verified;
 	}
 
-	public UserProfile getCreatedBy() {
+	public UserProfileEntity getCreatedBy() {
 		return createdBy;
 	}
 
-	public void setCreatedBy(UserProfile createdBy) {
+	public void setCreatedBy(UserProfileEntity createdBy) {
 		this.createdBy = createdBy;
 	}
 
-	public UserProfile getLastUpdatedBy() {
+	public UserProfileEntity getLastUpdatedBy() {
 		return lastUpdatedBy;
 	}
 
-	public void setLastUpdatedBy(UserProfile lastUpdatedBy) {
+	public void setLastUpdatedBy(UserProfileEntity lastUpdatedBy) {
 		this.lastUpdatedBy = lastUpdatedBy;
 	}
 }

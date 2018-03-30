@@ -7,6 +7,7 @@ import org.immutables.value.Value;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.nowellpoint.api.UserProfileResource;
 import com.nowellpoint.registration.model.UserInfo;
 import com.nowellpoint.util.Assert;
 
@@ -31,10 +32,11 @@ public abstract class AbstractUserInfo {
 		return Assert.isNotNullOrEmpty(getFirstName()) ? getFirstName().concat(" ").concat(getLastName()) : getLastName(); 
 	}
 	
-//	public Meta getMeta() {
-//		return Meta.builder()
-//				.id(getId().toString())
-//				//.resourceClass(UserProfile.class)
-//				.build();
-//	}
+	@Value.Derived
+	public Meta getMeta() {
+		return Meta.builder()
+				.id(getId().toString())
+				.resourceClass(UserProfileResource.class)
+				.build();
+	}
 }

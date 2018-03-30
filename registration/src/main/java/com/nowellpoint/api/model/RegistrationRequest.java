@@ -32,6 +32,16 @@ public class RegistrationRequest {
 	@NotNull
 	private String plan;
 	
+	private String cardholderName;
+	
+	private String expirationMonth;
+	
+	private String expirationYear;
+	
+	private String cardNumber;
+	
+	private String cvv;
+	
 	public RegistrationRequest() {
 		
 	}
@@ -62,5 +72,25 @@ public class RegistrationRequest {
 
 	public String getPlan() {
 		return plan;
+	}
+
+	public String getCardholderName() {
+		return cardholderName;
+	}
+
+	public String getExpirationMonth() {
+		return expirationMonth;
+	}
+
+	public String getExpirationYear() {
+		return expirationYear;
+	}
+
+	public String getCardNumber() {
+		return cardNumber;
+	}
+
+	public String getCvv() {
+		return cvv;
 	}
 }

@@ -15,13 +15,5 @@ public interface RegistrationService {
 	
 	public void resendVerificationEmail(String id);
 	
-	public Registration provision(
-			String id, 
-			String cardholderName, 
-			String expirationMonth, 
-			String expirationYear,
-			String number, 
-			String cvv);
-	
 	public void deleteRegistration(String id);
 }

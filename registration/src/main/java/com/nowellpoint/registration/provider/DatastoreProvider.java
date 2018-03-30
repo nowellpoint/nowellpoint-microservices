@@ -10,8 +10,8 @@ import org.mongodb.morphia.Morphia;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.nowellpoint.registration.entity.RegistrationDocument;
-import com.nowellpoint.registration.entity.UserProfile;
+import com.nowellpoint.registration.entity.RegistrationEntity;
+import com.nowellpoint.registration.entity.UserProfileEntity;
 import com.nowellpoint.registration.util.EnvironmentVariables;
 
 @Startup
@@ -32,8 +32,8 @@ public class DatastoreProvider {
         
         final Morphia morphia = new Morphia();
         
-        morphia.map(RegistrationDocument.class);
-        morphia.map(UserProfile.class);
+        morphia.map(RegistrationEntity.class);
+        morphia.map(UserProfileEntity.class);
 
         datastore = morphia.createDatastore(mongoClient, mongoClientUri.getDatabase());
         datastore.ensureIndexes();

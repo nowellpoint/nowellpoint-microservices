@@ -6,17 +6,12 @@ import javax.inject.Inject;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
-import org.jboss.logging.Logger;
-
 import com.nowellpoint.api.RegistrationResource;
 import com.nowellpoint.api.model.RegistrationRequest;
 import com.nowellpoint.registration.service.RegistrationService;
 import com.nowellpoint.registration.model.Registration;
 
 public class RegistrationResourceImpl implements RegistrationResource {
-	
-	@Inject
-	private Logger logger;
 	
 	@Inject
 	private RegistrationService registrationService;
@@ -49,38 +44,6 @@ public class RegistrationResourceImpl implements RegistrationResource {
 		Registration registration = registrationService.updateRegistration(id, request);
 		return Response.ok(registration)
 				.build();
-	}
-	
-	@Override
-	public Response provision(
-			String id, 
-			String cardholderName, 
-			String expirationMonth, 
-			String expirationYear,
-			String cardNumber, 
-			String cvv) {
-		
-		try {
-			
-			Registration registration = registrationService.provision(
-					id, 
-					cardholderName,
-					expirationMonth, 
-					expirationYear, 
-					cardNumber, 
-					cvv);
-			
-			return Response.ok(registration)
-					.build();
-		
-		} catch (Exception e) {
-			
-			logger.error(e);
-			
-			//throw new InternalServerErrorException(MessageProvider.getMessage(Locale.getDefault(), MessageConstants.UNEXPECTED_EXCEPTION));
-			
-			return null;
-		}
 	}
     
 	@Override

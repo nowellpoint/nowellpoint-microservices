@@ -10,8 +10,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.nowellpoint.registration.model.Meta;
+import com.nowellpoint.registration.util.UriInfoThreadLocal;
 import com.nowellpoint.util.Assert;
-import com.nowellpoint.util.Properties;
 
 @Value.Immutable
 @Value.Style(typeImmutable = "*", jdkOnly=true)
@@ -27,8 +27,9 @@ public abstract class AbstractMeta {
 	public abstract @JsonIgnore @Nullable Class<?> getResourceClass();
 	public abstract @JsonIgnore @Nullable String getId();
 	
+	@Value.Derived
 	public String getHref() {
-		return UriBuilder.fromUri(System.getProperty(Properties.API_HOSTNAME))
+		return UriBuilder.fromUri(UriInfoThreadLocal.get().getBaseUri())
 				.path(getResourceClass())
 				.path("/{id}")
 				.build(Assert.isNotNullOrEmpty(getId()) ? getId() : "{id}")

@@ -1,7 +1,6 @@
 package com.nowellpoint.registration.event;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.concurrent.Executors;
 
 import javax.enterprise.event.Observes;
@@ -48,7 +47,7 @@ public class RegistrationEventListener {
 			    Personalization personalization = new Personalization();
 			    personalization.addTo(to);
 			    personalization.addSubstitution("%name%", registration.getName());
-			    personalization.addSubstitution("%emailVerificationToken%", buildEmailVerificationHref(registration.getEmailVerificationToken()).toString());
+			    personalization.addSubstitution("%emailVerificationToken%", buildEmailVerificationHref(registration.getEmailVerificationToken()));
 			    
 			    Mail mail = new Mail();
 			    mail.setFrom(from);
@@ -58,21 +57,22 @@ public class RegistrationEventListener {
 			    
 			    Request request = new Request();
 			    try {
-			    		request.setMethod(Method.POST);
-			    		request.setEndpoint("mail/send");
-			    		request.setBody(mail.build());
-			    		Response response = sendgrid.api(request);
-			    		logger.info("sendEmailVerificationMessage: " + response.getStatusCode() + " " + response.getBody());
+			    	request.setMethod(Method.POST);
+			    	request.setEndpoint("mail/send");
+			    	request.setBody(mail.build());
+			    	Response response = sendgrid.api(request);
+			    	logger.info("sendEmailVerificationMessage: " + response.getStatusCode() + " " + response.getBody());
 			    } catch (IOException e) {
-			    		logger.error(e);
+			    	logger.error(e);
 			    }
 			}
 		});
 	}
 	
-	private URI buildEmailVerificationHref(String emailVerificationToken) {
+	private String buildEmailVerificationHref(String emailVerificationToken) {
 		return UriBuilder.fromUri(System.getProperty(Properties.VERIFY_EMAIL_REDIRECT))
 				.queryParam("emailVerificationToken", "{emailVerificationToken}")
-				.build(emailVerificationToken);
+				.build(emailVerificationToken)
+				.toString();
 	}
 }

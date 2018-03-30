@@ -1,10 +1,9 @@
 package com.nowellpoint.registration.entity;
 
-import org.bson.types.ObjectId;
 import org.mongodb.morphia.annotations.Entity;
 
 @Entity(value = "user.profiles")
-public class UserProfile extends BaseEntity {
+public class UserProfileEntity extends BaseEntity {
 	
 	private String username;
 
@@ -22,12 +21,12 @@ public class UserProfile extends BaseEntity {
 
 	private Boolean isActive;
 	
-	public UserProfile() {
+	public UserProfileEntity() {
 		
 	}
 	
-	public UserProfile(String id) {
-		setId(new ObjectId(id));
+	public UserProfileEntity(String id) {
+		super(id);
 	}
 	
 	public String getUsername() {

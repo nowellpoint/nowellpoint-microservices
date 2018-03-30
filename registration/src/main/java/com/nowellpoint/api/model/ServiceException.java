@@ -2,8 +2,9 @@ package com.nowellpoint.api.model;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Locale;
 import java.util.ResourceBundle;
+
+import com.nowellpoint.registration.util.LocaleThreadLocal;
 
 public class ServiceException extends RuntimeException {
 
@@ -19,6 +20,7 @@ public class ServiceException extends RuntimeException {
 	private static final String REGISTRATION_INVALIED_OR_EXPIRED = "registration.invalid.or.expired";
 	private static final String REGISTRATION_USER_CONFLICT = "registration.user.conflict";
 	private static final String REGISTRATION_DOMAIN_CONFLICT = "registration.domain.conflict";
+	private static final String INVALID_EMAIL_VERIFICATION_TOKEN = "invalid.email.verification.token";
 	
 	private int statusCode;
 	private String errorCode;
@@ -51,31 +53,35 @@ public class ServiceException extends RuntimeException {
 		return errors;
 	}
 	
-	public static String getRegistrationIdNotFound(Locale locale, String id) {
-		return getMessage(locale, REGISTRATION_NOT_FOUND, id);
+	public static String getRegistrationIdNotFound(String id) {
+		return getMessage(REGISTRATION_NOT_FOUND, id);
 	}
 	
-	public static String getInvalidValueForId(Locale locale, String id) {
-		return getMessage(locale, INVALID_VALUE_FOR_ID, id);
+	public static String getInvalidValueForId(String id) {
+		return getMessage(INVALID_VALUE_FOR_ID, id);
 	}
 	
-	public static String getInvalidPlan(Locale locale, String plan) {
-		return getMessage(locale, REGISTRATION_INVALID_PLAN, plan);
+	public static String getInvalidPlan(String plan) {
+		return getMessage(REGISTRATION_INVALID_PLAN, plan);
 	}
 	
-	public static String getInvalidOrExpiredRegistration(Locale locale) {
-		return getMessage(locale, REGISTRATION_INVALIED_OR_EXPIRED);
+	public static String getInvalidOrExpiredRegistration() {
+		return getMessage(REGISTRATION_INVALIED_OR_EXPIRED);
 	}
 	
-	public static String getRegistrationUserConflict(Locale locale, String username) {
-		return getMessage(locale, REGISTRATION_USER_CONFLICT, username);
+	public static String getRegistrationUserConflict(String username) {
+		return getMessage(REGISTRATION_USER_CONFLICT, username);
 	}
 	
-	public static String getRegistrationDomainConflict(Locale locale, String domain) {
-		return getMessage(locale, REGISTRATION_DOMAIN_CONFLICT, domain);
+	public static String getRegistrationDomainConflict(String domain) {
+		return getMessage(REGISTRATION_DOMAIN_CONFLICT, domain);
 	}
 	
-	private static String getMessage(Locale locale, String key, Object... args) {
-		return String.format(ResourceBundle.getBundle("messages", locale).getString(key), args);
+	public static String getInvalidEmailVerificationToken(String emailVerificationToken) {
+		return getMessage(INVALID_EMAIL_VERIFICATION_TOKEN, emailVerificationToken);
+	}
+	
+	private static String getMessage(String key, Object... args) {
+		return String.format(ResourceBundle.getBundle("messages", LocaleThreadLocal.get()).getString(key), args);
 	}
 }

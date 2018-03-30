@@ -31,7 +31,7 @@ import org.modelmapper.convention.MatchingStrategies;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nowellpoint.registration.entity.UserProfile;
+import com.nowellpoint.registration.entity.UserProfileEntity;
 import com.nowellpoint.registration.provider.CacheProvider;
 import com.nowellpoint.registration.model.ModifiableUserInfo;
 import com.nowellpoint.registration.model.UserInfo;
@@ -63,9 +63,9 @@ public abstract class AbstractService {
 				return source == null ? null : source.toString();
 			}
 		});
-		modelMapper.addConverter(new AbstractConverter<UserProfile, UserInfo>() {
+		modelMapper.addConverter(new AbstractConverter<UserProfileEntity, UserInfo>() {
 			@Override
-			protected UserInfo convert(UserProfile source) {
+			protected UserInfo convert(UserProfileEntity source) {
 				return source == null ? null : modelMapper.map(source, ModifiableUserInfo.class).toImmutable();
 			}
 		});

@@ -1,9 +1,9 @@
 package com.nowellpoint.registration.model;
 
+import java.util.Locale;
+
 import org.immutables.value.Value;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -17,8 +17,11 @@ public abstract class AbstractLogEntry {
 	public abstract String getStatusInfo();
 	public abstract String getRequestMethod();
 	public abstract String getRequestUri();
+	public abstract Long getStartTime();
+	public abstract Long getDuration();
 	
-	public String toJson() throws JsonProcessingException {
-		return new ObjectMapper().writeValueAsString(this);
+	@Value.Default
+	public Locale getLocale() {
+		return Locale.getDefault();
 	}
 }

@@ -50,19 +50,6 @@ public interface RegistrationResource {
 	
 	@PermitAll
 	@POST
-	@Path("{id}/provision")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.APPLICATION_JSON)
-    public Response provision(
-    		@PathParam("id") String id, 
-    		@FormParam("cardholderName") String cardholderName,
-			@FormParam("expirationMonth") String expirationMonth,
-			@FormParam("expirationYear") String expirationYear,
-			@FormParam("cardNumber") String cardNumber,
-			@FormParam("cvv") String cvv);
-	
-	@PermitAll
-	@POST
 	@Path("{id}/password")
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	@Produces(MediaType.APPLICATION_JSON)

@@ -14,8 +14,8 @@ import org.mongodb.morphia.query.Query;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.nowellpoint.registration.entity.RegistrationDAO;
-import com.nowellpoint.registration.entity.RegistrationDocument;
-import com.nowellpoint.registration.entity.UserProfile;
+import com.nowellpoint.registration.entity.RegistrationEntity;
+import com.nowellpoint.registration.entity.UserProfileEntity;
 import com.nowellpoint.registration.model.ModifiableRegistration;
 import com.nowellpoint.registration.model.ModifiableUserInfo;
 import com.nowellpoint.registration.model.Registration;
@@ -51,21 +51,21 @@ public class CreateRegistrationTest {
 				return source == null ? null : source.toString();
 			}
 		});
-		mapper.addConverter(new AbstractConverter<UserProfile, UserInfo>() {
+		mapper.addConverter(new AbstractConverter<UserProfileEntity, UserInfo>() {
 			@Override
-			protected UserInfo convert(UserProfile source) {
+			protected UserInfo convert(UserProfileEntity source) {
 				return source == null ? null : mapper.map(source, ModifiableUserInfo.class).toImmutable();
 			}
 		});
 		
-		Query<UserProfile> query = datastore
-				.createQuery(UserProfile.class)
+		Query<UserProfileEntity> query = datastore
+				.createQuery(UserProfileEntity.class)
 				.field("username")
 				.equal("system.administrator@nowellpoint.com");
 				 
-		UserProfile userProfile = query.get();
+		UserProfileEntity userProfileEntity = query.get();
 		
-		UserInfo userInfo = mapper.map(userProfile, ModifiableUserInfo.class).toImmutable();
+		UserInfo userInfo = mapper.map(userProfileEntity, ModifiableUserInfo.class).toImmutable();
 		
 		Registration registration = Registration.builder()
 				.countryCode("US")
@@ -84,9 +84,9 @@ public class CreateRegistrationTest {
 				.expiresAt(Instant.now().plusSeconds(1209600).toEpochMilli())
 				.build();
 		
-		RegistrationDAO dao = new RegistrationDAO(RegistrationDocument.class, datastore);
+		RegistrationDAO dao = new RegistrationDAO(RegistrationEntity.class, datastore);
 		
-		RegistrationDocument document = mapper.map(registration, RegistrationDocument.class);
+		RegistrationEntity document = mapper.map(registration, RegistrationEntity.class);
 		
 		dao.save(document);
 		
@@ -102,7 +102,7 @@ public class CreateRegistrationTest {
 		System.out.println(registration.getLastUpdatedBy().getId());
 		System.out.println(registration.getLastUpdatedBy().getName());
 		
-		RegistrationDocument entity = dao.get(new ObjectId(registration.getId()));
+		RegistrationEntity entity = dao.get(new ObjectId(registration.getId()));
 		
 		Assert.notNull(entity.getDomain());
 		

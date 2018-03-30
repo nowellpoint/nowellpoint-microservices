@@ -1,14 +1,10 @@
 package com.nowellpoint.registration.service.impl;
 
 import java.time.Instant;
-import java.util.Locale;
-import java.util.Optional;
-import java.util.UUID;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
-import javax.ws.rs.NotFoundException;
 
 import org.bson.types.ObjectId;
 import org.jboss.logging.Logger;
@@ -16,15 +12,17 @@ import org.mongodb.morphia.query.Query;
 
 import com.nowellpoint.api.model.DomainConflictException;
 import com.nowellpoint.api.model.ExpiredRegistrationException;
+import com.nowellpoint.api.model.InvalidEmailVerificationTokenException;
 import com.nowellpoint.api.model.InvalidIdValueException;
 import com.nowellpoint.api.model.PlanNotFoundException;
 import com.nowellpoint.api.model.RegistrationNotFoundException;
 import com.nowellpoint.api.model.RegistrationRequest;
 import com.nowellpoint.api.model.UserConflictException;
-import com.nowellpoint.registration.entity.PlanDocument;
+import com.nowellpoint.registration.entity.OrganizationEntity;
+import com.nowellpoint.registration.entity.PlanEntity;
 import com.nowellpoint.registration.entity.RegistrationDAO;
-import com.nowellpoint.registration.entity.RegistrationDocument;
-import com.nowellpoint.registration.entity.UserProfile;
+import com.nowellpoint.registration.entity.RegistrationEntity;
+import com.nowellpoint.registration.entity.UserProfileEntity;
 import com.nowellpoint.registration.model.ModifiableRegistration;
 import com.nowellpoint.registration.model.ModifiableUserInfo;
 import com.nowellpoint.registration.model.Registration;
@@ -48,12 +46,12 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	
 	@PostConstruct
 	public void init() {
-		dao = new RegistrationDAO(RegistrationDocument.class, datastoreProvider.getDatastore());
+		dao = new RegistrationDAO(RegistrationEntity.class, datastoreProvider.getDatastore());
 	}
 	
 	@Override
 	public Registration findById(String id) {
-		RegistrationDocument entity = get(RegistrationDocument.class, id);
+		RegistrationEntity entity = get(RegistrationEntity.class, id);
 		if (Assert.isNull(entity)) {
 			try {
 				entity = dao.get(new ObjectId(id));
@@ -190,16 +188,7 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		registrationEvent.fire(registration);
 	}
 	
-	@Override
-	public Registration provision(
-			String id, 
-			String cardholderName, 
-			String expirationMonth, 
-			String expirationYear,
-			String number, 
-			String cvv) {
-		
-		Registration registration = findById(id);
+	private Registration provision(Registration registration) {
 		
 	//	Plan plan = findPlanById(registration.getPlanId());
 		
@@ -259,31 +248,36 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		dao.deleteById(new ObjectId(id));
 	}
 	
+	/**
+	 * 
+	 * @param emailVerificationToken
+	 * @return
+	 */
+	
 	private Registration findByEmailVerificationToken(String emailVerificationToken) {
-//		Registration registration = null;
-//		try {
-//			registration = findOne( Filters.eq ( "emailVerificationToken", emailVerificationToken ) );
-//			isExpired(registration.getExpiresAt());
-//		} catch (DocumentNotFoundException e) {
-//			throw new ValidationException(MessageProvider.getMessage(Locale.getDefault(), MessageConstants.REGISTRATION_INVALID_OR_EXPIRED));
-//		}
-//		return registration;
-		return null;
+		Query<RegistrationEntity> query = datastoreProvider.getDatastore()
+				.createQuery(RegistrationEntity.class)
+				.field("emailVerificationToken")
+				.equal(emailVerificationToken);
+		
+		if (query.count() == 0) {
+			throw new InvalidEmailVerificationTokenException(emailVerificationToken);
+		}
+		
+		Registration registration = modelMapper.map(query.get(), ModifiableRegistration.class).toImmutable();
+		
+		isExpired(registration.getExpiresAt());
+		
+		return registration;
 	}
 	
-	private void publish(String email) {
-//		if (Boolean.valueOf(System.getProperty("registration.send.notification"))) {
-//			AmazonSNS snsClient = AmazonSNSClient.builder().build(); 
-//			PublishRequest publishRequest = new PublishRequest(
-//					"arn:aws:sns:us-east-1:600862814314:REGISTRATION", 
-//					MessageProvider.getMessage(Locale.getDefault(), MessageConstants.REGISTRATION_RECEIVED), email);
-//			
-//			snsClient.publish(publishRequest);
-//		}
-	}
+	/**
+	 * 
+	 * @param registration
+	 */
 	
 	private void save(Registration registration) {
-		RegistrationDocument entity = modelMapper.map(registration, RegistrationDocument.class);
+		RegistrationEntity entity = modelMapper.map(registration, RegistrationEntity.class);
 		dao.save(entity);
 		set(entity.getId().toString(), entity);
 		registration = modelMapper.map(entity, ModifiableRegistration.class).toImmutable();
@@ -326,15 +320,30 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		}
 	}
 	
+	/**
+	 * 
+	 * @param domain
+	 */
+	
 	private void isDomainRegistered(String domain) {
-		return;
+		Query<OrganizationEntity> query = datastoreProvider.getDatastore()
+				.createQuery(OrganizationEntity.class)
+				.field("domain")
+				.equal(domain);
 		
-		//throw new DomainConflictException(request.getDomain());
+		if (query.count() > 0) {
+			throw new DomainConflictException(domain);
+		} 
 	}
 	
+	/**
+	 * 
+	 * @param username
+	 */
+	
 	private void isUserRegistred(String username) {
-		Query<UserProfile> query = datastoreProvider.getDatastore()
-				.createQuery(UserProfile.class)
+		Query<UserProfileEntity> query = datastoreProvider.getDatastore()
+				.createQuery(UserProfileEntity.class)
 				.field("username")
 				.equal(username);
 		
@@ -343,20 +352,30 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		} 
 	}
 	
+	/**
+	 * 
+	 * @return UserInfo for System Administrator
+	 */
+	
 	private UserInfo getSystemAdmin() {
-		Query<UserProfile> query = datastoreProvider.getDatastore()
-				.createQuery(UserProfile.class)
+		Query<UserProfileEntity> query = datastoreProvider.getDatastore()
+				.createQuery(UserProfileEntity.class)
 				.field("username")
 				.equal("system.administrator@nowellpoint.com");
 				 
-		UserProfile userProfile = query.get();
+		UserProfileEntity userProfileEntity = query.get();
 		
-		return modelMapper.map(userProfile, ModifiableUserInfo.class).toImmutable();
+		return modelMapper.map(userProfileEntity, ModifiableUserInfo.class).toImmutable();
 	}
 	
+	/**
+	 * 
+	 * @param plan
+	 */
+	
 	private void isValidPlan(String plan) {
-		Query<PlanDocument> query = datastoreProvider.getDatastore()
-				.createQuery(PlanDocument.class)
+		Query<PlanEntity> query = datastoreProvider.getDatastore()
+				.createQuery(PlanEntity.class)
 				.field("planCode")
 				.equal(plan);
 		
