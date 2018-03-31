@@ -1,1 +1,4 @@
+https://travis-ci.org/nowellpoint/nowellpoint-microservices.svg?branch=1.0.0
+
+
 = Nowellpoint Microservices
