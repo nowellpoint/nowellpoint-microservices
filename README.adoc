@@ -1,4 +1,5 @@
 https://travis-ci.org/nowellpoint/nowellpoint-microservices.svg?branch=1.0.0
 
+[![Build Status](https://travis-ci.org/nowellpoint/nowellpoint-microservices.svg?branch=1.0.0)](https://travis-ci.org/nowellpoint/nowellpoint-microservices)
 
 = Nowellpoint Microservices
