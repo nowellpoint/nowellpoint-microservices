@@ -13,6 +13,8 @@ import org.immutables.value.Value;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.nowellpoint.api.RegistrationResource;
@@ -93,5 +95,10 @@ public abstract class AbstractRegistration {
 	@Value.Default
 	public Date getLastUpdatedOn() {
 		return now;
+	}
+	
+	@JsonIgnore
+	public String asJson() throws JsonProcessingException {
+		return new ObjectMapper().writeValueAsString(this);
 	}
 }

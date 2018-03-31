@@ -283,36 +283,10 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		registration = modelMapper.map(entity, ModifiableRegistration.class).toImmutable();
 	}
 	
-	//private UserProfile createUserProfile(String firstName, String lastName, String email, String phone, String countryCode, Organization organization) {
-		//return userProfileService.createUserProfile(firstName, lastName, email, phone, countryCode, organization);
-	//}
-	
-//	private Organization createOrganization(Plan plan, String domain, String firstName, String lastName, String email, String phone, String countryCode) {
-//		return organizationService.createOrganization(
-//				plan, 
-//				domain, 
-//				firstName, 
-//				lastName, 
-//				email, 
-//				phone, 
-//				countryCode);
-//	}
-//	
-//	private Organization createOrganization(Plan plan, String domain, String firstName, String lastName, String email, String phone, String countryCode, String cardholderName, String expirationMonth, String expirationYear, String number, String cvv) {
-//		return organizationService.createOrganization(
-//				plan, 
-//				domain, 
-//				firstName, 
-//				lastName, 
-//				email, 
-//				phone, 
-//				countryCode, 
-//				cardholderName, 
-//				expirationMonth, 
-//				expirationYear, 
-//				number, 
-//				cvv);
-//	}
+	/**
+	 * 
+	 * @param expiresAt
+	 */
 	
 	private void isExpired(Long expiresAt) {
 		if (Instant.ofEpochMilli(expiresAt).isBefore(Instant.now())) {

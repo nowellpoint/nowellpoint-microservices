@@ -1,3 +1,3 @@
-[![Build Status](https://travis-ci.org/nowellpoint/nowellpoint-microservices.svg?branch=1.0.0)](https://travis-ci.org/nowellpoint/nowellpoint-microservices)
+image:https://travis-ci.org/nowellpoint/nowellpoint-microservices.svg?branch=1.0.0["Build Status", link="https://travis-ci.org/nowellpoint/nowellpoint-microservices"]
 
 = Nowellpoint Microservices
