@@ -52,6 +52,7 @@ public class ResourceRequestFilter implements ContainerRequestFilter, ContainerR
 		final String requestUri = uriInfo.getRequestUri().toString();
 		final Long startTime = Long.valueOf(httpRequest.getAttribute(START_TIME).toString());
 		final Long duration = System.currentTimeMillis() - startTime;
+		final Locale locale = httpRequest.getLocale() != null ? httpRequest.getLocale() : Locale.getDefault();
 		
 		LogEntry logEntry = LogEntry.builder()
 				.statusCode(statusCode)
@@ -60,7 +61,7 @@ public class ResourceRequestFilter implements ContainerRequestFilter, ContainerR
 				.requestUri(requestUri)
 				.startTime(startTime)
 				.duration(duration)
-				.locale(httpRequest.getLocale() != null ? httpRequest.getLocale() : Locale.getDefault())
+				.locale(locale)
 				.build();
 		
 		writeLogEntry(RegistrationResource.class.getName(), logEntry);
