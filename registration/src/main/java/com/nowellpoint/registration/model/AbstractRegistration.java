@@ -34,7 +34,6 @@ public abstract class AbstractRegistration {
 	public abstract @Nullable String getFirstName();
 	public abstract String getLastName();
 	public abstract String getEmail();
-	public abstract @Nullable String getPhone();
 	public abstract String getCountryCode();
 	public abstract String getDomain();
 	public abstract String getPlan();

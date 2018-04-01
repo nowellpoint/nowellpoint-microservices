@@ -107,7 +107,6 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 				.lastName(request.getLastName())
 				.lastUpdatedBy(userInfo)
 				.plan(request.getPlan())
-				.phone(request.getPhone())
 				.build();
 
 		/**
@@ -154,7 +153,6 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 				.firstName(request.getFirstName())
 				.lastName(lastName)
 				.plan(request.getPlan()) 
-				.phone(request.getPhone())
 				.verified(verified)
 				.build();
 		

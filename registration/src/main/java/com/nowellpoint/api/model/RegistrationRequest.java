@@ -19,8 +19,6 @@ public class RegistrationRequest {
 	@Email
 	private String email;
 	
-	private String phone;
-	
 	@NotNull
 	@Size(min=2, max=2)
 	private String countryCode;
@@ -56,10 +54,6 @@ public class RegistrationRequest {
 
 	public String getEmail() {
 		return email;
-	}
-
-	public String getPhone() {
-		return phone;
 	}
 
 	public String getCountryCode() {
