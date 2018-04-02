@@ -1,16 +1,20 @@
 package com.nowellpoint.registration.entity;
 
 import org.mongodb.morphia.annotations.Entity;
+import org.mongodb.morphia.annotations.Field;
+import org.mongodb.morphia.annotations.Index;
+import org.mongodb.morphia.annotations.IndexOptions;
+import org.mongodb.morphia.annotations.Indexes;
 import org.mongodb.morphia.annotations.Reference;
 
 @Entity(value = "registrations", noClassnameStored = true)
-//@Indexes({
-//    @Index(
-//        options = @IndexOptions(unique = true),
-//        fields = {
-//            @Field(value = "domain")
-//        })
-//})
+@Indexes({
+    @Index(
+        options = @IndexOptions(unique = true),
+        fields = {
+            @Field(value = "domain")
+        })
+})
 public class RegistrationEntity extends BaseEntity {
 	
 	private String firstName;
@@ -32,6 +36,8 @@ public class RegistrationEntity extends BaseEntity {
 	private String plan;
 	
 	private String identityHref;
+	
+	private String stage;
 	
 	@Reference
 	private UserProfileEntity createdBy;
@@ -131,6 +137,14 @@ public class RegistrationEntity extends BaseEntity {
 
 	public void setVerified(Boolean verified) {
 		this.verified = verified;
+	}
+
+	public String getStage() {
+		return stage;
+	}
+
+	public void setStage(String stage) {
+		this.stage = stage;
 	}
 
 	public UserProfileEntity getCreatedBy() {

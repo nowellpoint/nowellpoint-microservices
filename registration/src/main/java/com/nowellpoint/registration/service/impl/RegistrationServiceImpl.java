@@ -140,6 +140,7 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 				.lastUpdatedOn(getCurrentDate())
 				.lastUpdatedBy(getSystemAdmin())
 				.plan(request.getPlan()) 
+				.stage(Registration.CUSTOMER)
 				.build();
 		
 		save(instance);
@@ -159,6 +160,7 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 				.lastUpdatedOn(getCurrentDate())
 				.lastUpdatedBy(getSystemAdmin())
 				.domain(request.getDomain()) 
+				.stage(Registration.UNQUALIFIED)
 				.build();
 		
 		save(instance);
@@ -178,6 +180,7 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		
 		Registration instance = Registration.builder()
 				.from(registration)
+				.lastUpdatedOn(getCurrentDate())
 				.expiresAt(System.currentTimeMillis())
 				.verified(Boolean.TRUE)
 				.build();
@@ -242,7 +245,7 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 				.identityHref(null) //uri.toString())
 				.build();
 		
-		//update(instance);
+		save(instance);
 		
 		return instance;
 		
@@ -275,17 +278,6 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		dao.save(entity);
 		set(entity.getId().toString(), entity);
 		registration = modelMapper.map(entity, ModifiableRegistration.class).toImmutable();
-	}
-	
-	/**
-	 * 
-	 * @param expiresAt
-	 */
-	
-	private void isExpired(Long expiresAt) {
-		if (Instant.ofEpochMilli(expiresAt).isBefore(Instant.now())) {
-			throw new ExpiredRegistrationException();
-		}
 	}
 	
 	/**

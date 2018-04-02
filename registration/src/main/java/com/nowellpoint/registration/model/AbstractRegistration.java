@@ -3,6 +3,7 @@ package com.nowellpoint.registration.model;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
+import java.util.UUID;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.core.UriBuilder;
@@ -35,12 +36,16 @@ public abstract class AbstractRegistration {
 	public abstract String getLastName();
 	public abstract String getEmail();
 	public abstract String getCountryCode();
-	public abstract @Nullable String getDomain();
-	public abstract @Nullable String getIdentityHref(); 
+	public abstract @Nullable String getIdentityHref();
 	public abstract UserInfo getCreatedBy();
 	public abstract UserInfo getLastUpdatedBy();
 	
 	private static final Date now = Date.from(Instant.now());
+	
+	private static final String PROSPECT = "PROSPECT";
+	public static final String QUALIFIED = "QUALIFIED";
+	public static final String UNQUALIFIED = "UNQUALIFIED";
+	public static final String CUSTOMER = "CUSTOMER";
 	
 	@Value.Derived
 	public String getName() {
@@ -80,9 +85,20 @@ public abstract class AbstractRegistration {
 		return Boolean.FALSE;
 	}
 	
+	@JsonIgnore
 	@Value.Default
 	public Long getExpiresAt() {
 		return Instant.now().plusSeconds(1209600).toEpochMilli();
+	}
+	
+	@Value.Default
+	public String getDomain() {
+		return UUID.randomUUID().toString();
+	}
+	
+	@Value.Default
+	public String getStage() {
+		return PROSPECT;
 	}
 	
 	@JsonIgnore
@@ -99,6 +115,15 @@ public abstract class AbstractRegistration {
 	@Value.Default
 	public Date getLastUpdatedOn() {
 		return now;
+	}
+	
+	@Value.Derived
+	public Boolean isExpired() {
+		if (Instant.ofEpochMilli(getExpiresAt()).isBefore(Instant.now())) {
+			return Boolean.TRUE;
+		} else {
+			return Boolean.FALSE;
+		}
 	}
 	
 	@JsonIgnore
