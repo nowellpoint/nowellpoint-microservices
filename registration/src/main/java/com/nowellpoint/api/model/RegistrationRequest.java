@@ -24,29 +24,6 @@ public class RegistrationRequest {
 	@Size(min=2, max=2)
 	private String countryCode;
 	
-//	@NotNull
-//	@Size(min=1, max=100)
-//	private String domain;
-//	
-//	@NotNull
-//	private String plan;
-//	
-//	@NotNull
-//	private String cardholderName;
-//	
-//	@NotNull
-//	private String expirationMonth;
-//	
-//	@NotNull
-//	private String expirationYear;
-//	
-//	@NotNull
-//	@CreditCardNumber
-//	private String cardNumber;
-//	
-//	@NotNull
-//	private String cvv;
-	
 	public RegistrationRequest() {
 		
 	}
@@ -66,32 +43,4 @@ public class RegistrationRequest {
 	public String getCountryCode() {
 		return countryCode;
 	}
-
-//	public String getDomain() {
-//		return domain;
-//	}
-//
-//	public String getPlan() {
-//		return plan;
-//	}
-//
-//	public String getCardholderName() {
-//		return cardholderName;
-//	}
-//
-//	public String getExpirationMonth() {
-//		return expirationMonth;
-//	}
-//
-//	public String getExpirationYear() {
-//		return expirationYear;
-//	}
-//
-//	public String getCardNumber() {
-//		return cardNumber;
-//	}
-
-//	public String getCvv() {
-//		return cvv;
-//	}
 }

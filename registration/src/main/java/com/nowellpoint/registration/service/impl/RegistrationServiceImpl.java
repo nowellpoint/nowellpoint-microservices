@@ -11,18 +11,15 @@ import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.bson.types.ObjectId;
 import org.jboss.logging.Logger;
 import org.mongodb.morphia.query.Query;
 
-import com.netflix.hystrix.HystrixCommand;
-import com.netflix.hystrix.HystrixCommandGroupKey;
 import com.netflix.hystrix.HystrixCommandProperties;
 import com.nowellpoint.api.model.DomainConflictException;
+import com.nowellpoint.api.model.DomainRequest;
 import com.nowellpoint.api.model.ExpiredRegistrationException;
 import com.nowellpoint.api.model.InvalidEmailVerificationTokenException;
 import com.nowellpoint.api.model.InvalidIdValueException;
@@ -30,13 +27,13 @@ import com.nowellpoint.api.model.PlanNotFoundException;
 import com.nowellpoint.api.model.RegistrationNotFoundException;
 import com.nowellpoint.api.model.RegistrationRequest;
 import com.nowellpoint.api.model.ServiceException;
+import com.nowellpoint.api.model.UpgradeRequest;
 import com.nowellpoint.api.model.UserConflictException;
 import com.nowellpoint.registration.entity.OrganizationEntity;
 import com.nowellpoint.registration.entity.PlanEntity;
 import com.nowellpoint.registration.entity.RegistrationDAO;
 import com.nowellpoint.registration.entity.RegistrationEntity;
 import com.nowellpoint.registration.entity.UserProfileEntity;
-import com.nowellpoint.registration.event.Created;
 import com.nowellpoint.registration.model.ModifiableRegistration;
 import com.nowellpoint.registration.model.ModifiableUserInfo;
 import com.nowellpoint.registration.model.Registration;
@@ -130,31 +127,19 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	}
 	
 	@Override
-	public Registration updateRegistration(String id, RegistrationRequest request) {
+	public Registration upgrade(String id, UpgradeRequest request) {
 		
 		Registration registration = findById(id);
 		
-//		if (Assert.isNotNullOrEmpty(request.getPlan())) {
-//			isValidPlan(request.getPlan());
-//		}
-		
-		String domain = null; //Assert.isNotNullOrEmpty(request.getDomain()) ? request.getDomain() : registration.getDomain();
-		String countryCode = Assert.isNotNullOrEmpty(request.getCountryCode()) ? request.getCountryCode() : registration.getCountryCode();
-		String email = Assert.isNotNullOrEmpty(request.getEmail()) ? request.getEmail() : registration.getEmail();
-		String lastName = Assert.isNotNullOrEmpty(request.getLastName()) ? request.getLastName() : registration.getLastName();
-		Boolean verified = Assert.isNotEqual(request.getEmail(), registration.getEmail());
+		if (Assert.isNotNullOrEmpty(request.getPlan())) {
+			isValidPlan(request.getPlan());
+		}
 		
 		Registration instance = Registration.builder()
 				.from(registration)
-				.countryCode(countryCode)
-				.domain(domain)
-				.email(email)
 				.lastUpdatedOn(getCurrentDate())
 				.lastUpdatedBy(getSystemAdmin())
-				.firstName(request.getFirstName())
-				.lastName(lastName)
-				//.plan(request.getPlan()) 
-				.verified(verified)
+				.plan(request.getPlan()) 
 				.build();
 		
 		save(instance);
@@ -165,8 +150,31 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	}
 	
 	@Override
-	public Registration verifyEmail(String emailVerificationToken) {
-		Registration registration = findByEmailVerificationToken(emailVerificationToken);
+	public Registration addDomain(String id, DomainRequest request) {
+		
+		Registration registration = findById(id);
+		
+		Registration instance = Registration.builder()
+				.from(registration)
+				.lastUpdatedOn(getCurrentDate())
+				.lastUpdatedBy(getSystemAdmin())
+				.domain(request.getDomain()) 
+				.build();
+		
+		save(instance);
+		
+		registrationEvent.fire(instance);
+		
+		return instance;
+		
+	}
+	
+	@Override
+	public Registration verifyEmail(String id, String emailVerificationToken) {
+		
+		Registration registration = findById(id);
+		
+		validateEmailVerificationToken(registration, emailVerificationToken);
 		
 		Registration instance = Registration.builder()
 				.from(registration)
@@ -183,25 +191,6 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	public void resendVerificationEmail(String id) {
 		Registration registration = findById(id);
 		registrationEvent.fire(registration);
-	}
-	
-	private void upgrade(RegistrationRequest request) {
-		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-	    Validator validator = factory.getValidator();
-	    
-//	    Set<ConstraintViolation<Car>> constraintViolations =
-//	    	      validator.validate( car );
-		
-		
-//		if (Assert.isNull(request.getCardNumber()) ||
-//				Assert.isNull(request.getCardholderName()) ||
-//				Assert.isNull(request.getCvv()) ||
-//				Assert.isNull(request.getExpirationMonth()) ||
-//				Assert.isNull(request.getExpirationYear())) {
-//			
-//			throw new WebApplicationException()
-//			
-//		}
 	}
 	
 	private Registration provision(Registration registration) {
@@ -270,21 +259,10 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	 * @return
 	 */
 	
-	private Registration findByEmailVerificationToken(String emailVerificationToken) {
-		Query<RegistrationEntity> query = datastoreProvider.getDatastore()
-				.createQuery(RegistrationEntity.class)
-				.field("emailVerificationToken")
-				.equal(emailVerificationToken);
-		
-		if (query.count() == 0) {
+	private void validateEmailVerificationToken(Registration registration, String emailVerificationToken) {
+		if (! registration.getEmailVerificationToken().equals(emailVerificationToken)) {
 			throw new InvalidEmailVerificationTokenException(emailVerificationToken);
 		}
-		
-		Registration registration = modelMapper.map(query.get(), ModifiableRegistration.class).toImmutable();
-		
-		isExpired(registration.getExpiresAt());
-		
-		return registration;
 	}
 	
 	/**

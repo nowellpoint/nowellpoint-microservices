@@ -21,8 +21,8 @@ import com.nowellpoint.api.RegistrationResource;
 import com.nowellpoint.registration.model.Meta;
 import com.nowellpoint.registration.model.Registration;
 import com.nowellpoint.registration.model.UserInfo;
+import com.nowellpoint.registration.util.UriInfoThreadLocal;
 import com.nowellpoint.util.Assert;
-import com.nowellpoint.util.Properties;
 
 @Value.Immutable
 @Value.Modifiable
@@ -49,11 +49,12 @@ public abstract class AbstractRegistration {
 	
 	@Value.Derived
 	public URI getEmailVerificationHref() {
-		return UriBuilder.fromUri(System.getProperty(Properties.API_HOSTNAME)) 
+		return UriBuilder.fromUri(UriInfoThreadLocal.get().getBaseUri()) 
 				.path(RegistrationResource.class)
-				.path("verify-email")
+				.path("{id}")
+				.path("email-verification-token")
 				.path("{emailVerificationToken}")
-				.build(getEmailVerificationToken());
+				.build(getId(), getEmailVerificationToken());
 	}
 	
 	@Value.Derived

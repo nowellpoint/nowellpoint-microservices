@@ -1,7 +1,6 @@
 package com.nowellpoint.api;
 
 import javax.annotation.security.PermitAll;
-import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.FormParam;
@@ -13,7 +12,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.nowellpoint.api.model.DomainRequest;
 import com.nowellpoint.api.model.RegistrationRequest;
+import com.nowellpoint.api.model.UpgradeRequest;
 
 @Path("/registrations")
 public interface RegistrationResource {
@@ -26,27 +27,34 @@ public interface RegistrationResource {
 	
 	@PermitAll
 	@POST
-	@Path("verify-email/{emailVerificationToken}")
+	@Path("{id}/email-verification-token/{emailVerificationToken}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response verifyEmail(@PathParam("emailVerificationToken") String emailVerificationToken);
+	public Response verifyEmail(@PathParam("id") String id, @PathParam("emailVerificationToken") String emailVerificationToken);
 	
 	@PermitAll
-	@POST
-	@Path("{id}/verify-email")
+	@GET
+	@Path("{id}/email-verification-token")
 	public Response resendVerificationEmail(@PathParam("id") String id);
 	
 	@PermitAll
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-    public Response createRegistration(@Valid RegistrationRequest request);
+    public Response register(RegistrationRequest request);
 	
 	@PermitAll
 	@POST
-	@Path("{id}")
+	@Path("{id}/domain")
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-    public Response updateRegistration(@PathParam("id") String id, RegistrationRequest request);
+    public Response domain(@PathParam("id") String id, DomainRequest request);
+	
+	@PermitAll
+	@POST
+	@Path("{id}/plan")
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+    public Response upgrade(@PathParam("id") String id, UpgradeRequest request);
 	
 	@PermitAll
 	@POST

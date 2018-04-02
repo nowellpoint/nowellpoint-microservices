@@ -7,7 +7,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriBuilder;
 
 import com.nowellpoint.api.RegistrationResource;
+import com.nowellpoint.api.model.DomainRequest;
 import com.nowellpoint.api.model.RegistrationRequest;
+import com.nowellpoint.api.model.UpgradeRequest;
 import com.nowellpoint.registration.service.RegistrationService;
 import com.nowellpoint.registration.model.Registration;
 
@@ -24,7 +26,7 @@ public class RegistrationResourceImpl implements RegistrationResource {
 	}
     
 	@Override
-    public Response createRegistration(RegistrationRequest request) {
+    public Response register(RegistrationRequest request) {
 		Registration registration = registrationService.register(request);
 		URI uri = UriBuilder.fromPath(registration.getMeta().getHref()).build();
 		return Response.created(uri)
@@ -40,8 +42,15 @@ public class RegistrationResourceImpl implements RegistrationResource {
 	}
 	
 	@Override
-	public Response updateRegistration(String id, RegistrationRequest request) {
-		Registration registration = registrationService.updateRegistration(id, request);
+	public Response upgrade(String id, UpgradeRequest request) {
+		Registration registration = registrationService.upgrade(id, request);
+		return Response.ok(registration)
+				.build();
+	}
+	
+	@Override
+	public Response domain(String id, DomainRequest request) {
+		Registration registration = registrationService.addDomain(id, request);
 		return Response.ok(registration)
 				.build();
 	}
@@ -52,8 +61,8 @@ public class RegistrationResourceImpl implements RegistrationResource {
     }
 	
 	@Override
-	public Response verifyEmail(String emailVerificationToken) {	
-		Registration registration = registrationService.verifyEmail(emailVerificationToken);
+	public Response verifyEmail(String id, String emailVerificationToken) {	
+		Registration registration = registrationService.verifyEmail(id, emailVerificationToken);
 		return Response.ok(registration)
 				.build();
 	}
