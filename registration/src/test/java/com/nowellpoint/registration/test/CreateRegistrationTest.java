@@ -1,8 +1,5 @@
 package com.nowellpoint.registration.test;
 
-import java.sql.Date;
-import java.time.Instant;
-
 import org.bson.types.ObjectId;
 import org.junit.Test;
 import org.modelmapper.AbstractConverter;
@@ -70,18 +67,11 @@ public class CreateRegistrationTest {
 		Registration registration = Registration.builder()
 				.countryCode("US")
 				.email("jherson@aim.com")
-				.phone("999-999-9999")
-				.emailVerificationToken("jfioufidfdf")
 				.firstName("John")
 				.lastName("Herson")
-				.verified(Boolean.FALSE)
-				.plan("FREE")
 				.createdBy(userInfo)
-				.createdOn(Date.from(Instant.now()))
 				.lastUpdatedBy(userInfo)
-				.lastUpdatedOn(Date.from(Instant.now()))
 				.domain("nowellpoint")
-				.expiresAt(Instant.now().plusSeconds(1209600).toEpochMilli())
 				.build();
 		
 		RegistrationDAO dao = new RegistrationDAO(RegistrationEntity.class, datastore);

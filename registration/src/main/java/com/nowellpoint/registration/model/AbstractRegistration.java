@@ -35,8 +35,7 @@ public abstract class AbstractRegistration {
 	public abstract String getLastName();
 	public abstract String getEmail();
 	public abstract String getCountryCode();
-	public abstract String getDomain();
-	public abstract String getPlan();
+	public abstract @Nullable String getDomain();
 	public abstract @Nullable String getIdentityHref(); 
 	public abstract UserInfo getCreatedBy();
 	public abstract UserInfo getLastUpdatedBy();
@@ -68,6 +67,11 @@ public abstract class AbstractRegistration {
 	@Value.Default
 	public String getId() {
 		return new ObjectId().toString();
+	}
+	
+	@Value.Default
+	public String getPlan() {
+		return "FREE";
 	}
 	
 	@Value.Default

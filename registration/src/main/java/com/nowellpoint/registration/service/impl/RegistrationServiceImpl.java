@@ -1,15 +1,27 @@
 package com.nowellpoint.registration.service.impl;
 
 import java.time.Instant;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.event.Event;
 import javax.inject.Inject;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.bson.types.ObjectId;
 import org.jboss.logging.Logger;
 import org.mongodb.morphia.query.Query;
 
+import com.netflix.hystrix.HystrixCommand;
+import com.netflix.hystrix.HystrixCommandGroupKey;
+import com.netflix.hystrix.HystrixCommandProperties;
 import com.nowellpoint.api.model.DomainConflictException;
 import com.nowellpoint.api.model.ExpiredRegistrationException;
 import com.nowellpoint.api.model.InvalidEmailVerificationTokenException;
@@ -17,12 +29,14 @@ import com.nowellpoint.api.model.InvalidIdValueException;
 import com.nowellpoint.api.model.PlanNotFoundException;
 import com.nowellpoint.api.model.RegistrationNotFoundException;
 import com.nowellpoint.api.model.RegistrationRequest;
+import com.nowellpoint.api.model.ServiceException;
 import com.nowellpoint.api.model.UserConflictException;
 import com.nowellpoint.registration.entity.OrganizationEntity;
 import com.nowellpoint.registration.entity.PlanEntity;
 import com.nowellpoint.registration.entity.RegistrationDAO;
 import com.nowellpoint.registration.entity.RegistrationEntity;
 import com.nowellpoint.registration.entity.UserProfileEntity;
+import com.nowellpoint.registration.event.Created;
 import com.nowellpoint.registration.model.ModifiableRegistration;
 import com.nowellpoint.registration.model.ModifiableUserInfo;
 import com.nowellpoint.registration.model.Registration;
@@ -47,6 +61,7 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	@PostConstruct
 	public void init() {
 		dao = new RegistrationDAO(RegistrationEntity.class, datastoreProvider.getDatastore());
+		HystrixCommandProperties.Setter().withCircuitBreakerRequestVolumeThreshold(10);
 	}
 	
 	@Override
@@ -74,19 +89,7 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		 * 
 		 */
 		
-		isValidPlan(request.getPlan());
-		
-		/**
-		 * 
-		 */
-
-		isUserRegistred(request.getEmail());
-		
-		/**
-		 * 
-		 */
-		
-		isDomainRegistered(request.getDomain());
+		validate(request);
 
 		/**
 		 * 
@@ -101,12 +104,10 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		Registration instance = Registration.builder()
 				.countryCode(request.getCountryCode())
 				.createdBy(userInfo)
-				.domain(request.getDomain())
 				.email(request.getEmail())
 				.firstName(request.getFirstName())
 				.lastName(request.getLastName())
 				.lastUpdatedBy(userInfo)
-				.plan(request.getPlan())
 				.build();
 
 		/**
@@ -133,11 +134,11 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 		
 		Registration registration = findById(id);
 		
-		if (Assert.isNotNullOrEmpty(request.getPlan())) {
-			isValidPlan(request.getPlan());
-		}
+//		if (Assert.isNotNullOrEmpty(request.getPlan())) {
+//			isValidPlan(request.getPlan());
+//		}
 		
-		String domain = Assert.isNotNullOrEmpty(request.getDomain()) ? request.getDomain() : registration.getDomain();
+		String domain = null; //Assert.isNotNullOrEmpty(request.getDomain()) ? request.getDomain() : registration.getDomain();
 		String countryCode = Assert.isNotNullOrEmpty(request.getCountryCode()) ? request.getCountryCode() : registration.getCountryCode();
 		String email = Assert.isNotNullOrEmpty(request.getEmail()) ? request.getEmail() : registration.getEmail();
 		String lastName = Assert.isNotNullOrEmpty(request.getLastName()) ? request.getLastName() : registration.getLastName();
@@ -152,15 +153,13 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 				.lastUpdatedBy(getSystemAdmin())
 				.firstName(request.getFirstName())
 				.lastName(lastName)
-				.plan(request.getPlan()) 
+				//.plan(request.getPlan()) 
 				.verified(verified)
 				.build();
 		
 		save(instance);
 		
-		if (!instance.getVerified()) {
-			registrationEvent.fire(instance);
-		}
+		registrationEvent.fire(instance);
 		
 		return instance;
 	}
@@ -184,6 +183,25 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	public void resendVerificationEmail(String id) {
 		Registration registration = findById(id);
 		registrationEvent.fire(registration);
+	}
+	
+	private void upgrade(RegistrationRequest request) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+	    Validator validator = factory.getValidator();
+	    
+//	    Set<ConstraintViolation<Car>> constraintViolations =
+//	    	      validator.validate( car );
+		
+		
+//		if (Assert.isNull(request.getCardNumber()) ||
+//				Assert.isNull(request.getCardholderName()) ||
+//				Assert.isNull(request.getCvv()) ||
+//				Assert.isNull(request.getExpirationMonth()) ||
+//				Assert.isNull(request.getExpirationYear())) {
+//			
+//			throw new WebApplicationException()
+//			
+//		}
 	}
 	
 	private Registration provision(Registration registration) {
@@ -355,4 +373,36 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 			throw new PlanNotFoundException(plan);
 		}
 	}
+	
+	/**
+	 * 
+	 * @param request
+	 */
+	
+	private void validate(RegistrationRequest request) {
+		ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+	    Validator validator = factory.getValidator();
+	    
+	    Set<ConstraintViolation<RegistrationRequest>> constraintViolations = validator.validate( request );
+	    
+	    if (! constraintViolations.isEmpty()) {
+	    	Set<String> errors = new HashSet<String>();
+	    	constraintViolations.stream().forEach(v -> {
+	    		errors.add(v.getMessage());
+	    	});
+	    	
+	    	throw new ServiceException(Status.BAD_REQUEST, "VALIDATION_FAILED", errors);
+	    }
+	}
+	
+//	class CreateCustomer extends HystrixCommand<Registration> {
+//		public CreateCustomer() {
+//			super(HystrixCommandGroupKey.Factory.asKey("Registration"));
+//		}
+//
+//		@Override
+//		protected Customer run() {
+//			
+//		}
+//	}
 }

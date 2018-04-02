@@ -12,33 +12,40 @@ public class RegistrationRequest {
 	
 	private String firstName;
 	
-	@NotNull(message = "{registration.last.name.notnull}")
+	@NotNull(message = "{registration.missing.last.name}")
     @Size(min=1, max=50)
 	private String lastName;
 	
-	@Email
+	@NotNull(message = "{registration.missing.email}")
+	@Email(message = "{registration.invalid.email}")
 	private String email;
 	
-	@NotNull
+	@NotNull(message = "{registration.missing.country.code}")
 	@Size(min=2, max=2)
 	private String countryCode;
 	
-	@NotNull
-	@Size(min=1, max=100)
-	private String domain;
-	
-	@NotNull
-	private String plan;
-	
-	private String cardholderName;
-	
-	private String expirationMonth;
-	
-	private String expirationYear;
-	
-	private String cardNumber;
-	
-	private String cvv;
+//	@NotNull
+//	@Size(min=1, max=100)
+//	private String domain;
+//	
+//	@NotNull
+//	private String plan;
+//	
+//	@NotNull
+//	private String cardholderName;
+//	
+//	@NotNull
+//	private String expirationMonth;
+//	
+//	@NotNull
+//	private String expirationYear;
+//	
+//	@NotNull
+//	@CreditCardNumber
+//	private String cardNumber;
+//	
+//	@NotNull
+//	private String cvv;
 	
 	public RegistrationRequest() {
 		
@@ -60,31 +67,31 @@ public class RegistrationRequest {
 		return countryCode;
 	}
 
-	public String getDomain() {
-		return domain;
-	}
+//	public String getDomain() {
+//		return domain;
+//	}
+//
+//	public String getPlan() {
+//		return plan;
+//	}
+//
+//	public String getCardholderName() {
+//		return cardholderName;
+//	}
+//
+//	public String getExpirationMonth() {
+//		return expirationMonth;
+//	}
+//
+//	public String getExpirationYear() {
+//		return expirationYear;
+//	}
+//
+//	public String getCardNumber() {
+//		return cardNumber;
+//	}
 
-	public String getPlan() {
-		return plan;
-	}
-
-	public String getCardholderName() {
-		return cardholderName;
-	}
-
-	public String getExpirationMonth() {
-		return expirationMonth;
-	}
-
-	public String getExpirationYear() {
-		return expirationYear;
-	}
-
-	public String getCardNumber() {
-		return cardNumber;
-	}
-
-	public String getCvv() {
-		return cvv;
-	}
+//	public String getCvv() {
+//		return cvv;
+//	}
 }

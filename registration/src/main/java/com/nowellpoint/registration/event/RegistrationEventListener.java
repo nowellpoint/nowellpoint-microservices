@@ -12,6 +12,15 @@ import org.jboss.logging.Logger;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
 import com.amazonaws.services.sqs.model.SendMessageRequest;
+import com.braintreegateway.Address;
+import com.braintreegateway.AddressRequest;
+import com.braintreegateway.BraintreeGateway;
+import com.braintreegateway.CreditCard;
+import com.braintreegateway.CreditCardRequest;
+import com.braintreegateway.Customer;
+import com.braintreegateway.CustomerRequest;
+import com.braintreegateway.Environment;
+import com.braintreegateway.Result;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.nowellpoint.registration.model.Registration;
 import com.nowellpoint.registration.util.EnvironmentVariables;
@@ -34,6 +43,48 @@ public class RegistrationEventListener {
 	private static final SendGrid sendgrid = new SendGrid(EnvironmentVariables.getSendgridApiKey());
 	private static final String QUEUE_NAME = "PROVISION_REQUEST";
 	
+//	private static BraintreeGateway gateway = new BraintreeGateway(
+//			Environment.parseEnvironment(EnvironmentVariables.getPaymentGatewayEnvironment()),
+//			EnvironmentVariables.getPaymentGatewayMerchantId(),
+//			EnvironmentVariables.getPaymentGatewayPublicKey(),
+//			EnvironmentVariables.getPaymentGatewayPublicKey()
+//	);
+//	
+//	static {
+//		gateway.clientToken().generate();
+//	}
+	
+//	public void createdEventHandler(@Observes @Created Registration registration) {
+//		Executors.newSingleThreadExecutor().execute(new Runnable() {
+//			@Override
+//			public void run() {
+//				CustomerRequest request = new CustomerRequest()
+//						  .firstName(registration.getFirstName())
+//						  .lastName(registration.getLastName())
+//						  .company(registration.getDomain())
+//						  .email(registration.getEmail());
+//				
+//				Result<Customer> customerResult = gateway.customer().create(request);
+//				
+//				AddressRequest addressRequest = new AddressRequest()
+//						.countryCodeAlpha2(registration.getCountryCode());
+//				
+//				Result<Address> addressResult = gateway.address().create(customerResult.getTarget().getId(), addressRequest);
+//				
+//				CreditCardRequest creditCardRequest = new CreditCardRequest()
+////						.cardholderName(registration.getCreditCard().getCardholderName())
+////						.expirationMonth(registration.getCreditCard().getExpirationMonth())
+////						.expirationYear(registration.getCreditCard().getExpirationYear())
+////						.number(registration.getCreditCard().getCardNumber())
+////						.cvv(registration.getCreditCard().getCvv())
+//						.customerId(customerResult.getTarget().getId())
+//						.billingAddressId(addressResult.getTarget().getId());
+//				
+//				Result<CreditCard> creditCardResult = gateway.creditCard().create(creditCardRequest);
+//			}
+//		});	
+//	}
+//	
 	public void registrationEventHandler(@Observes Registration registration) {
 		
 		if (registration.getVerified()) {
@@ -55,6 +106,10 @@ public class RegistrationEventListener {
 			});
 			
 		} else {
+			
+			if (!registration.getVerified()) {
+				
+			}
 			Executors.newSingleThreadExecutor().execute(new Runnable() {
 				@Override
 				public void run() {

@@ -163,6 +163,11 @@
 			<version>${version.aws.sdk}</version>
 		</dependency>
 		<dependency>
+			<groupId>com.braintreepayments.gateway</groupId>
+			<artifactId>braintree-java</artifactId>
+			<version>${version.braintree.sdk}</version>
+		</dependency>
+		<dependency>
 			<groupId>com.nowellpoint</groupId>
 			<artifactId>nowellpoint-aws-core</artifactId>
 			<version>1.0.10-SNAPSHOT</version>
