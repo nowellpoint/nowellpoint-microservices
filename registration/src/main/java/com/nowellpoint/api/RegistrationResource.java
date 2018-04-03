@@ -43,29 +43,6 @@ public interface RegistrationResource {
     public Response register(RegistrationRequest request);
 	
 	@PermitAll
-	@POST
-	@Path("{id}/domain")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-    public Response domain(@PathParam("id") String id, DomainRequest request);
-	
-	@PermitAll
-	@POST
-	@Path("{id}/plan")
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-    public Response upgrade(@PathParam("id") String id, UpgradeRequest request);
-	
-	@PermitAll
-	@POST
-	@Path("{id}/password")
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Produces(MediaType.APPLICATION_JSON)
-    public Response setPassword(
-    		@FormParam("password") String password, 
-    		@FormParam("confirmPassword") String confirmPassword);
-	
-	@PermitAll
 	@DELETE
 	@Path("{id}")
     public Response deleteRegistration(@PathParam("id") String id);

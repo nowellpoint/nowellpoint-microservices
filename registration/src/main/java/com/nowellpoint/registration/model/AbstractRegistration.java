@@ -3,7 +3,6 @@ package com.nowellpoint.registration.model;
 import java.net.URI;
 import java.time.Instant;
 import java.util.Date;
-import java.util.UUID;
 
 import javax.annotation.Nullable;
 import javax.ws.rs.core.UriBuilder;
@@ -42,11 +41,6 @@ public abstract class AbstractRegistration {
 	
 	private static final Date now = Date.from(Instant.now());
 	
-	private static final String PROSPECT = "PROSPECT";
-	public static final String QUALIFIED = "QUALIFIED";
-	public static final String UNQUALIFIED = "UNQUALIFIED";
-	public static final String CUSTOMER = "CUSTOMER";
-	
 	@Value.Derived
 	public String getName() {
 		return Assert.isNotNullOrEmpty(getFirstName()) ? getFirstName().concat(" ").concat(getLastName()) : getLastName(); 
@@ -76,11 +70,6 @@ public abstract class AbstractRegistration {
 	}
 	
 	@Value.Default
-	public String getPlan() {
-		return "FREE";
-	}
-	
-	@Value.Default
 	public Boolean getVerified() {
 		return Boolean.FALSE;
 	}
@@ -89,16 +78,6 @@ public abstract class AbstractRegistration {
 	@Value.Default
 	public Long getExpiresAt() {
 		return Instant.now().plusSeconds(1209600).toEpochMilli();
-	}
-	
-	@Value.Default
-	public String getDomain() {
-		return UUID.randomUUID().toString();
-	}
-	
-	@Value.Default
-	public String getStage() {
-		return PROSPECT;
 	}
 	
 	@JsonIgnore

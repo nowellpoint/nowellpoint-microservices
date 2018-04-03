@@ -127,51 +127,6 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	}
 	
 	@Override
-	public Registration upgrade(String id, UpgradeRequest request) {
-		
-		Registration registration = findById(id);
-		
-		if (Assert.isNotNullOrEmpty(request.getPlan())) {
-			isValidPlan(request.getPlan());
-		}
-		
-		Registration instance = Registration.builder()
-				.from(registration)
-				.lastUpdatedOn(getCurrentDate())
-				.lastUpdatedBy(getSystemAdmin())
-				.plan(request.getPlan()) 
-				.stage(Registration.CUSTOMER)
-				.build();
-		
-		save(instance);
-		
-		registrationEvent.fire(instance);
-		
-		return instance;
-	}
-	
-	@Override
-	public Registration addDomain(String id, DomainRequest request) {
-		
-		Registration registration = findById(id);
-		
-		Registration instance = Registration.builder()
-				.from(registration)
-				.lastUpdatedOn(getCurrentDate())
-				.lastUpdatedBy(getSystemAdmin())
-				.domain(request.getDomain()) 
-				.stage(Registration.UNQUALIFIED)
-				.build();
-		
-		save(instance);
-		
-		registrationEvent.fire(instance);
-		
-		return instance;
-		
-	}
-	
-	@Override
 	public Registration verifyEmail(String id, String emailVerificationToken) {
 		
 		Registration registration = findById(id);

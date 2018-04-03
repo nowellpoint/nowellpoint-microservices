@@ -71,7 +71,6 @@ public class CreateRegistrationTest {
 				.lastName("Herson")
 				.createdBy(userInfo)
 				.lastUpdatedBy(userInfo)
-				.domain("nowellpoint")
 				.build();
 		
 		RegistrationDAO dao = new RegistrationDAO(RegistrationEntity.class, datastore);
