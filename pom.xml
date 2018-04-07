@@ -7,6 +7,39 @@
 	<name>Microservice Parent</name>
 	<version>1.0.0-SNAPSHOT</version>
 	<packaging>pom</packaging>
+	
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>9</version>
+	</parent>
+	
+	<issueManagement>
+		<url>https://github.com/nowellpoint/nowellpoint-microservices.git</url>
+		<system>GitHub Issues</system>
+	</issueManagement>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:git@github.com:nowellpoint/nowellpoint-microservices</connection>
+		<developerConnection>scm:git:git@github.com:nowellpoint/nowellpoint-microservices</developerConnection>
+		<url>https://github.com/nowellpoint/nowellpoint-microservices</url>
+	</scm>
+
+	<developers>
+		<developer>
+			<id>jherson</id>
+			<name>John Herson</name>
+			<email>john.herson@nowellpoint.com</email>
+		</developer>
+	</developers>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
