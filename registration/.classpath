@@ -147,6 +147,6 @@
   <classpathentry kind="var" path="M2_REPO/com/braintreepayments/gateway/braintree-java/2.77.0/braintree-java-2.77.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/org/osgi/org.osgi.core/4.2.0/org.osgi.core-4.2.0.jar"/>
   <classpathentry kind="var" path="M2_REPO/com/fasterxml/jackson/jr/jackson-jr-objects/2.9.0/jackson-jr-objects-2.9.0.jar"/>
-  <classpathentry kind="src" path="/nowellpoint-aws-core"/>
+  <classpathentry kind="var" path="M2_REPO/com/nowellpoint/nowellpoint-aws-core/1.0.10-SNAPSHOT/nowellpoint-aws-core-1.0.10-SNAPSHOT.jar"/>
   <classpathentry kind="var" path="M2_REPO/junit/junit/4.12/junit-4.12.jar"/>
 </classpath>
