@@ -93,7 +93,7 @@ public class CreateRegistrationTest {
 		
 		RegistrationEntity entity = dao.get(new ObjectId(registration.getId()));
 		
-		Assert.notNull(entity.getDomain());
+		Assert.notNull(entity.getCountryCode());
 		
 		dao.deleteById(new ObjectId(registration.getId()));
 	}

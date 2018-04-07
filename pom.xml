@@ -103,5 +103,6 @@
 
 	<modules>
 		<module>registration</module>
+		<module>authentication</module>
 	</modules>
 </project>

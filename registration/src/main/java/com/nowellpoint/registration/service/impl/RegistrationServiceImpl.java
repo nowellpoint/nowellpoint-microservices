@@ -1,6 +1,5 @@
 package com.nowellpoint.registration.service.impl;
 
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,17 +16,13 @@ import org.bson.types.ObjectId;
 import org.jboss.logging.Logger;
 import org.mongodb.morphia.query.Query;
 
-import com.netflix.hystrix.HystrixCommandProperties;
 import com.nowellpoint.api.model.DomainConflictException;
-import com.nowellpoint.api.model.DomainRequest;
-import com.nowellpoint.api.model.ExpiredRegistrationException;
 import com.nowellpoint.api.model.InvalidEmailVerificationTokenException;
 import com.nowellpoint.api.model.InvalidIdValueException;
 import com.nowellpoint.api.model.PlanNotFoundException;
 import com.nowellpoint.api.model.RegistrationNotFoundException;
 import com.nowellpoint.api.model.RegistrationRequest;
 import com.nowellpoint.api.model.ServiceException;
-import com.nowellpoint.api.model.UpgradeRequest;
 import com.nowellpoint.api.model.UserConflictException;
 import com.nowellpoint.registration.entity.OrganizationEntity;
 import com.nowellpoint.registration.entity.PlanEntity;
@@ -58,7 +53,6 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	@PostConstruct
 	public void init() {
 		dao = new RegistrationDAO(RegistrationEntity.class, datastoreProvider.getDatastore());
-		HystrixCommandProperties.Setter().withCircuitBreakerRequestVolumeThreshold(10);
 	}
 	
 	@Override
