@@ -53,10 +53,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
-			<artifactId>jaxrs</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>cdi</artifactId>
 		</dependency>
 		<dependency>
@@ -78,32 +74,6 @@
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>jaxrs-jsonp</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly.swarm</groupId>
-			<artifactId>hystrix</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly.swarm</groupId>
-			<artifactId>swagger</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.immutables</groupId>
-			<artifactId>value</artifactId>
-			<version>${version.immutables}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.immutables</groupId>
-			<artifactId>builder</artifactId>
-			<version>${version.immutables}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>org.immutables</groupId>
-			<artifactId>value-fixture</artifactId>
-			<version>${version.immutables}</version>
-			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.okta.sdk</groupId>
@@ -156,6 +126,24 @@
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>${version.model.mapper}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.immutables</groupId>
+			<artifactId>value</artifactId>
+			<version>${version.immutables}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.immutables</groupId>
+			<artifactId>builder</artifactId>
+			<version>${version.immutables}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.immutables</groupId>
+			<artifactId>value-fixture</artifactId>
+			<version>${version.immutables}</version>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>com.amazonaws</groupId>

@@ -53,10 +53,6 @@
 	<dependencies>
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
-			<artifactId>jaxrs</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>cdi</artifactId>
 		</dependency>
 		<dependency>
@@ -69,10 +65,6 @@
 		</dependency>
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
-			<artifactId>management</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>monitor</artifactId>
 		</dependency>
 		<dependency>
@@ -80,8 +72,9 @@
 			<artifactId>jaxrs-jsonp</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.wildfly.swarm</groupId>
-			<artifactId>swagger</artifactId>
+			<groupId>org.mongodb.morphia</groupId>
+			<artifactId>morphia</artifactId>
+			<version>${version.mongodb.morphia}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.immutables</groupId>
@@ -144,11 +137,6 @@
 			<version>${jedis.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>org.mongodb.morphia</groupId>
-			<artifactId>morphia</artifactId>
-			<version>${version.mongodb.morphia}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>${version.model.mapper}</version>
@@ -162,6 +150,11 @@
 			<groupId>com.nowellpoint</groupId>
 			<artifactId>api</artifactId>
 			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.nowellpoint</groupId>

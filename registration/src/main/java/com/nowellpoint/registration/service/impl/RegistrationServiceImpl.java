@@ -313,15 +313,4 @@ public class RegistrationServiceImpl extends AbstractService implements Registra
 	    	throw new ServiceException(Status.BAD_REQUEST, "VALIDATION_FAILED", errors);
 	    }
 	}
-	
-//	class CreateCustomer extends HystrixCommand<Registration> {
-//		public CreateCustomer() {
-//			super(HystrixCommandGroupKey.Factory.asKey("Registration"));
-//		}
-//
-//		@Override
-//		protected Customer run() {
-//			
-//		}
-//	}
 }
