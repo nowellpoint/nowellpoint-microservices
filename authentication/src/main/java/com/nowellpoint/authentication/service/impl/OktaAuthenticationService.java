@@ -1,4 +1,4 @@
-package com.nowellpoint.authentication;
+package com.nowellpoint.authentication.service.impl;
 
 import javax.inject.Inject;
 
@@ -8,6 +8,7 @@ import com.nowellpoint.authentication.model.AuthenticationException;
 import com.nowellpoint.authentication.model.Keys;
 import com.nowellpoint.authentication.model.TokenResponse;
 import com.nowellpoint.authentication.model.TokenVerificationResponse;
+import com.nowellpoint.authentication.service.AuthenticationService;
 import com.nowellpoint.authentication.util.EnvironmentVariables;
 import com.nowellpoint.http.HttpResponse;
 import com.nowellpoint.http.MediaType;

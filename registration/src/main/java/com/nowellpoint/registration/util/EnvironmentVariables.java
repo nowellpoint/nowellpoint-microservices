@@ -12,6 +12,8 @@ public class EnvironmentVariables {
 	private static final String PAYMENT_GATEWAY_MERCHANT_ID = "BRAINTREE_MERCHANT_ID";
 	private static final String PAYMENT_GATEWAY_PUBLIC_KEY = "BRAINTREE_PUBLIC_KEY";
 	private static final String PAYMENT_GATEWAY_PRIVATE_KEY = "BRAINTREE_PRIVATE_KEY";
+	private static final String LOGGLY_API_ENDPOINT = "LOGGLY_API_ENDPOINT";
+	private static final String LOGGLY_API_KEY = "LOGGLY_API_KEY";
 	
 	public static String getMongoClientUri() {
 		return getenv(MONGO_CLIENT_URI);
@@ -51,6 +53,14 @@ public class EnvironmentVariables {
 	
 	public static String getPaymentGatewayMerchantId() {
 		return getenv(PAYMENT_GATEWAY_MERCHANT_ID);
+	}
+	
+	public static String getLogglyApiEndpoint() {
+		return getenv(LOGGLY_API_ENDPOINT);
+	}
+	
+	public static String getLogglyApiKey() {
+		return getenv(LOGGLY_API_KEY);
 	}
 	
 	private static String getenv(String name) {

@@ -1,4 +1,4 @@
-package com.nowellpoint.authentication;
+package com.nowellpoint.authentication.service.impl;
 
 import java.math.BigInteger;
 import java.net.URI;
@@ -26,6 +26,8 @@ import com.nowellpoint.authentication.model.Key;
 import com.nowellpoint.authentication.model.Keys;
 import com.nowellpoint.authentication.model.TokenResponse;
 import com.nowellpoint.authentication.provider.DatastoreProvider;
+import com.nowellpoint.authentication.service.AuthenticationService;
+import com.nowellpoint.authentication.service.TokenService;
 import com.nowellpoint.util.Properties;
 
 import io.jsonwebtoken.Claims;
@@ -37,8 +39,10 @@ import io.jsonwebtoken.SigningKeyResolverAdapter;
 
 public class TokenServiceImpl implements TokenService {
 	
-	private static final Logger LOGGER = Logger.getLogger(TokenServiceImpl.class);
 	private static final Map<String,Key> KEY_CACHE = new ConcurrentHashMap<String,Key>();
+	
+	@Inject
+	private Logger log;
 	
 	@Inject
 	private DatastoreProvider datastoreProvider;
@@ -61,7 +65,7 @@ public class TokenServiceImpl implements TokenService {
 							BigInteger exponent = new BigInteger(1, Base64.getUrlDecoder().decode(key.getExponent()));
 							return KeyFactory.getInstance("RSA").generatePublic(new RSAPublicKeySpec(modulus, exponent));
 						} catch (InvalidKeySpecException | NoSuchAlgorithmException e) {
-							LOGGER.error(e);
+							log.error(e);
 							return null;
 						}
 					}})
@@ -118,8 +122,8 @@ public class TokenServiceImpl implements TokenService {
 					public java.security.Key resolveSigningKey(JwsHeader jwsHeader, Claims claims) {
 		        		Key key = getKey(jwsHeader.getKeyId());
 		        		return new SecretKeySpec(key.getModulus().getBytes(), "HmacSHA512");
-		            }
-		        }).parseClaimsJws(accessToken);
+		            }})
+				.parseClaimsJws(accessToken);
 	}
 	
 	private UserProfileEntity lookupUserProfile(String referenceId) {

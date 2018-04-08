@@ -12,10 +12,10 @@ import javax.ws.rs.core.UriInfo;
 
 import com.nowellpoint.api.TokenResource;
 import com.nowellpoint.api.model.Token;
-import com.nowellpoint.authentication.AuthenticationService;
-import com.nowellpoint.authentication.TokenService;
 import com.nowellpoint.authentication.model.AuthenticationException;
 import com.nowellpoint.authentication.model.TokenResponse;
+import com.nowellpoint.authentication.service.AuthenticationService;
+import com.nowellpoint.authentication.service.TokenService;
 
 public class TokenResourceImpl implements TokenResource {
 	

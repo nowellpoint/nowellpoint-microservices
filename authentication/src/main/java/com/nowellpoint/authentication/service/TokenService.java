@@ -1,4 +1,4 @@
-package com.nowellpoint.authentication;
+package com.nowellpoint.authentication.service;
 
 import com.nowellpoint.api.model.Token;
 import com.nowellpoint.authentication.model.TokenResponse;
