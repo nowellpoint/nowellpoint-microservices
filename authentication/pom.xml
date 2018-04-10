@@ -49,6 +49,8 @@
 		<version.war.plugin>2.6</version.war.plugin>
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 	</properties>
+	
+	
 
 	<dependencies>
 		<dependency>
@@ -132,14 +134,14 @@
 			<version>2.6</version>
 		</dependency>
 		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>${jedis.version}</version>
-		</dependency>
-		<dependency>
 			<groupId>org.modelmapper</groupId>
 			<artifactId>modelmapper</artifactId>
 			<version>${version.model.mapper}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+			<version>0.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.amazonaws</groupId>
@@ -150,11 +152,6 @@
 			<groupId>com.nowellpoint</groupId>
 			<artifactId>api</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>io.jsonwebtoken</groupId>
-			<artifactId>jjwt</artifactId>
-			<version>0.9.0</version>
 		</dependency>
 		<dependency>
 			<groupId>com.nowellpoint</groupId>
@@ -190,13 +187,13 @@
 							</generator>
 							<resources>
 								<env>
-									<REDIS_ENCRYPTION_KEY>${env.REDIS_ENCRYPTION_KEY}</REDIS_ENCRYPTION_KEY>
 									<MONGO_CLIENT_URI>${env.MONGO_CLIENT_URI}</MONGO_CLIENT_URI>
-									<REDIS_HOST>${env.REDIS_HOST}</REDIS_HOST>
-									<REDIS_PASSWORD>${env.REDIS_PASSWORD}</REDIS_PASSWORD>
-									<REDIS_PORT>${env.REDIS_PORT}</REDIS_PORT>
-									<SENDGRID_API_KEY>${env.SENDGRID_API_KEY}</SENDGRID_API_KEY>
-									<LOGGLY_API_ENDPOINT>${env.LOGGLY_API_ENDPOINT}</LOGGLY_API_ENDPOINT>
+									<OKTA_API_KEY>${env.OKTA_API_KEY}</OKTA_API_KEY>
+									<OKTA_ORG_URL>${env.OKTA_ORG_URL}</OKTA_ORG_URL>
+									<OKTA_CLIENT_ID>${env.OKTA_CLIENT_ID}</OKTA_CLIENT_ID>
+									<OKTA_CLIENT_SECRET>${env.OKTA_CLIENT_SECRET}</OKTA_CLIENT_SECRET>
+									<OKTA_AUTHORIZATION_SERVER>${env.OKTA_AUTHORIZATION_SERVER}</OKTA_AUTHORIZATION_SERVER>
+									<LOGGLY_API_ENDPOINT>http://logs-01.loggly.com/inputs</LOGGLY_API_ENDPOINT>
 									<LOGGLY_API_KEY>${env.LOGGLY_API_KEY}</LOGGLY_API_KEY>
 									<AB_ENABLED>off</AB_ENABLED>
 									<JAVA_OPTIONS>-Dswarm.project.stage=production</JAVA_OPTIONS>
