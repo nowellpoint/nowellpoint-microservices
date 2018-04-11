@@ -139,5 +139,6 @@
 		<module>api</module>
 		<module>registration</module>
 		<module>authentication</module>
+		<module>identity</module>
 	</modules>
 </project>

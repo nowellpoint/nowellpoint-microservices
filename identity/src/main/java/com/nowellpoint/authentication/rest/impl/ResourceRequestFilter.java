@@ -23,7 +23,7 @@ import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nowellpoint.api.RegistrationResource;
-import com.nowellpoint.api.model.LogEntry;
+import com.nowellpoint.authentication.model.LogEntry;
 import com.nowellpoint.authentication.util.EnvironmentVariables;
 import com.nowellpoint.authentication.util.LocaleThreadLocal;
 import com.nowellpoint.authentication.util.UriInfoThreadLocal;

@@ -1,7 +1,6 @@
 package com.nowellpoint.api.model;
 
 import java.util.Locale;
-import java.util.TimeZone;
 
 import org.immutables.value.Value;
 
@@ -18,7 +17,7 @@ public abstract class AbstractIdentity {
 	public abstract String getLastName();
 	public abstract String getName();
 	public abstract Organization getOrganization();
-	public abstract TimeZone getTimeZone();
+	public abstract String getTimeZone();
 	public abstract Locale getLocale();
 	public abstract Address getAddress();
 	public abstract Resources getResources();
