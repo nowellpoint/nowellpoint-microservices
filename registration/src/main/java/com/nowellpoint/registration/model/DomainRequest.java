@@ -1,4 +1,4 @@
-package com.nowellpoint.api.model;
+package com.nowellpoint.registration.model;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;

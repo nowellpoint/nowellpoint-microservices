@@ -1,4 +1,4 @@
-package com.nowellpoint.registration.model;
+package com.nowellpoint.api.model;
 
 import java.util.Locale;
 

@@ -7,7 +7,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 
-import com.nowellpoint.api.model.ServiceException;
+import com.nowellpoint.registration.model.ServiceException;
 
 @Provider
 public class ServiceExceptionMapper implements ExceptionMapper<ServiceException> {

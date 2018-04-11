@@ -22,7 +22,7 @@ import com.braintreegateway.CustomerRequest;
 import com.braintreegateway.Environment;
 import com.braintreegateway.Result;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.nowellpoint.registration.model.Registration;
+import com.nowellpoint.api.model.Registration;
 import com.nowellpoint.registration.util.EnvironmentVariables;
 import com.nowellpoint.util.Properties;
 import com.sendgrid.Content;

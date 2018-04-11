@@ -33,8 +33,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nowellpoint.registration.entity.UserProfileEntity;
 import com.nowellpoint.registration.provider.CacheProvider;
-import com.nowellpoint.registration.model.ModifiableUserInfo;
-import com.nowellpoint.registration.model.UserInfo;
+import com.nowellpoint.api.model.ModifiableUserInfo;
+import com.nowellpoint.api.model.UserInfo;
 import com.nowellpoint.registration.util.EnvironmentVariables;
 
 import redis.clients.jedis.Jedis;

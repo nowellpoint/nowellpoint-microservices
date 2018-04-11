@@ -1,4 +1,4 @@
-package com.nowellpoint.registration.model;
+package com.nowellpoint.api.model;
 
 import java.net.URI;
 import java.time.Instant;
@@ -18,11 +18,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.nowellpoint.api.RegistrationResource;
-import com.nowellpoint.registration.model.Meta;
-import com.nowellpoint.registration.model.Registration;
-import com.nowellpoint.registration.model.UserInfo;
-import com.nowellpoint.registration.util.UriInfoThreadLocal;
-import com.nowellpoint.util.Assert;
 
 @Value.Immutable
 @Value.Modifiable
@@ -43,12 +38,12 @@ public abstract class AbstractRegistration {
 	
 	@Value.Derived
 	public String getName() {
-		return Assert.isNotNullOrEmpty(getFirstName()) ? getFirstName().concat(" ").concat(getLastName()) : getLastName(); 
+		return getFirstName() != null ? getFirstName().trim().concat(" ").concat(getLastName()) : getLastName(); 
 	}
 	
 	@Value.Derived
 	public URI getEmailVerificationHref() {
-		return UriBuilder.fromUri(UriInfoThreadLocal.get().getBaseUri()) 
+		return UriBuilder.fromUri(System.getProperty("api.hostname")) 
 				.path(RegistrationResource.class)
 				.path("{id}")
 				.path("email-verification-token")

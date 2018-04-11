@@ -9,7 +9,7 @@ import javax.ws.rs.core.UriBuilder;
 import com.nowellpoint.api.RegistrationResource;
 import com.nowellpoint.api.model.RegistrationRequest;
 import com.nowellpoint.registration.service.RegistrationService;
-import com.nowellpoint.registration.model.Registration;
+import com.nowellpoint.api.model.Registration;
 
 public class RegistrationResourceImpl implements RegistrationResource {
 	

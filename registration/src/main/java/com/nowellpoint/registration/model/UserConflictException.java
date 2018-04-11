@@ -1,4 +1,4 @@
-package com.nowellpoint.api.model;
+package com.nowellpoint.registration.model;
 
 public class UserConflictException extends ServiceException {
 

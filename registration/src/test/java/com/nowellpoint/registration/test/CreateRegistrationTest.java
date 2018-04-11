@@ -10,13 +10,13 @@ import org.mongodb.morphia.query.Query;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
+import com.nowellpoint.api.model.ModifiableRegistration;
+import com.nowellpoint.api.model.ModifiableUserInfo;
+import com.nowellpoint.api.model.Registration;
+import com.nowellpoint.api.model.UserInfo;
 import com.nowellpoint.registration.entity.RegistrationDAO;
 import com.nowellpoint.registration.entity.RegistrationEntity;
 import com.nowellpoint.registration.entity.UserProfileEntity;
-import com.nowellpoint.registration.model.ModifiableRegistration;
-import com.nowellpoint.registration.model.ModifiableUserInfo;
-import com.nowellpoint.registration.model.Registration;
-import com.nowellpoint.registration.model.UserInfo;
 import com.okta.sdk.lang.Assert;
 
 public class CreateRegistrationTest {

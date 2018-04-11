@@ -1,7 +1,7 @@
 package com.nowellpoint.registration.service;
 
 import com.nowellpoint.api.model.RegistrationRequest;
-import com.nowellpoint.registration.model.Registration;
+import com.nowellpoint.api.model.Registration;
 
 public interface RegistrationService {
 	

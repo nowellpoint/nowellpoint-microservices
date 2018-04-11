@@ -1,4 +1,4 @@
-package com.nowellpoint.api.model;
+package com.nowellpoint.registration.model;
 
 import java.util.Arrays;
 import java.util.Collection;
