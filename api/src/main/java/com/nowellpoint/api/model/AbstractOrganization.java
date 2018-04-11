@@ -1,5 +1,7 @@
 package com.nowellpoint.api.model;
 
+import java.util.Set;
+
 import javax.annotation.Nullable;
 
 import org.immutables.value.Value;
@@ -18,9 +20,9 @@ public abstract class AbstractOrganization {
 	public abstract String getNumber();
 	public abstract String getDomain();
 	public abstract @Nullable String getName();
-//	public abstract @Nullable Subscription getSubscription();
-//	public abstract @Nullable Set<Transaction> getTransactions();
-//	public abstract @Nullable Set<UserInfo> getUsers();
+	public abstract @Nullable Subscription getSubscription();
+	public abstract @Nullable Set<Transaction> getTransactions();
+	public abstract @Nullable Set<UserInfo> getUsers();
 	
 	public Meta getMeta() {
 		return Meta.builder()
