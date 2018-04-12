@@ -33,6 +33,8 @@ public class UserProfileEntity extends BaseEntity {
 	@Reference
 	private OrganizationEntity organization;
 	
+	private Address address;
+	
 	public UserProfileEntity() {
 		
 	}
@@ -135,5 +137,13 @@ public class UserProfileEntity extends BaseEntity {
 
 	public void setOrganization(OrganizationEntity organization) {
 		this.organization = organization;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
 	}
 }

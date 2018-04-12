@@ -8,11 +8,15 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.ws.rs.core.UriBuilder;
 
+import org.bson.types.ObjectId;
 import org.mongodb.morphia.query.Query;
 
 import com.nowellpoint.api.IdentityResource;
 import com.nowellpoint.api.OrganizationResource;
+import com.nowellpoint.api.UserProfileResource;
+import com.nowellpoint.api.model.Address;
 import com.nowellpoint.api.model.Identity;
+import com.nowellpoint.api.model.Meta;
 import com.nowellpoint.api.model.Organization;
 import com.nowellpoint.api.model.Resources;
 import com.nowellpoint.identity.entity.OrganizationDAO;
@@ -43,11 +47,11 @@ public class IdentityResourceImpl implements IdentityResource {
 	@Override
 	public Response getIdentity(String organizationId, String userId) {
 		
-		String subject = securityContext.getUserPrincipal().getName();
-		
-		if (Assert.isNotEqual(subject, userId)) {
-			throw new ForbiddenException("You are not authorized to access this resource");
-		}
+//		String subject = securityContext.getUserPrincipal().getName();
+//		
+//		if (Assert.isNotEqual(subject, userId)) {
+//			throw new ForbiddenException("You are not authorized to access this resource");
+//		}
 		
 		UserProfileEntity userProfile = findUser(userId);
 		
@@ -58,30 +62,20 @@ public class IdentityResourceImpl implements IdentityResource {
 				.build()
 				.toString();
 		
-//		String jobsHref = UriBuilder.fromUri(EnvUtil.getValue(Variable.API_HOSTNAME))
-//				.path(JobResource.class)
-//				.build()
-//				.toString();
+		String jobsHref = UriBuilder.fromUri(System.getProperty("api.hostname"))
+				//.path(JobResource.class)
+				.build()
+				.toString();
 		
-//		String connectorsHref = UriBuilder.fromUri(EnvUtil.getValue(Variable.API_HOSTNAME))
-//				.path(ConnectorResource.class)
-//				.build()
-//				.toString();
+		String connectorsHref = UriBuilder.fromUri(System.getProperty("api.hostname"))
+				//.path(ConnectorResource.class)
+				.build()
+				.toString();
 		
 		Resources resources = Resources.builder()
-				//.connectors(connectorsHref)
+				.connectors(connectorsHref)
 				.organization(organizationHref)
-				//.jobs(jobsHref)
-				.build();
-		
-		Organization instance = Organization.builder()
-				.domain(organization.getDomain())
-				.id(organization.getId().toString())
-				.name(organization.getName())
-				.number(organization.getNumber())
-				//.subscription(organization.)
-				//.transactions(elements)
-				//.users(elements)
+				.jobs(jobsHref)
 				.build();
 		
 		Identity identity = Identity.builder()
@@ -92,9 +86,31 @@ public class IdentityResourceImpl implements IdentityResource {
 				.locale(userProfile.getLocale())
 				.timeZone(userProfile.getTimeZone())
 				.resources(resources)
-				//.meta(userProfile.getMeta())
-			//	.address(userProfile.getAddress())
-				.organization(instance)
+				.meta(Meta.builder()
+						.id(userProfile.getId().toString())
+						.resourceClass(UserProfileResource.class)
+						.build())
+				.address(Address.builder()
+						.addedOn(userProfile.getAddress().getAddedOn())
+						.city(userProfile.getAddress().getCity())
+						.countryCode(userProfile.getAddress().getCountryCode())
+						.id(userProfile.getAddress().getId())
+						.latitude(userProfile.getAddress().getLatitude())
+						.longitude(userProfile.getAddress().getLongitude())
+						.postalCode(userProfile.getAddress().getPostalCode())
+						.state(userProfile.getAddress().getState())
+						.street(userProfile.getAddress().getStreet())
+						.updatedOn(userProfile.getAddress().getUpdatedOn())
+						.build())
+				.organization(Organization.builder()
+						.domain(organization.getDomain())
+						.id(organization.getId().toString())
+						.name(organization.getName())
+						.number(organization.getNumber())
+						//.subscription(organization.)
+						//.transactions(elements)
+						//.users(elements)
+						.build())
 				.build();
 				
 		return Response.ok(identity)
@@ -102,12 +118,12 @@ public class IdentityResourceImpl implements IdentityResource {
 	}
 	
 	private UserProfileEntity findUser(String userId) {
-		UserProfileEntity entity = userProfileDAO.findOne(userId, UserProfileEntity.class);
+		UserProfileEntity entity = userProfileDAO.get(new ObjectId(userId));
 		return entity;
 	}
 	
 	private OrganizationEntity findOrganization(String organizationId) {
-		OrganizationEntity entity = organizationDAO.findOne(organizationId, OrganizationEntity.class);
+		OrganizationEntity entity = organizationDAO.get(new ObjectId(organizationId));
 		return entity;
 	}
 }

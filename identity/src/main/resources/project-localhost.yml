@@ -2,16 +2,16 @@ logger:
     level: DEBUG
 swarm:
     http:
-        port: 5010
+        port: 5020
     https:
         certificate:
             generate: true
-        port: 5110
+        port: 5120
     management:
         http:
-          port: 5980
+          port: 5970
         https:
-          port: 5983       
+          port: 5973       
 registration:
     send:
       notification: false
