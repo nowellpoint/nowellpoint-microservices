@@ -1,4 +1,4 @@
-package com.nowellpoint.authentication.rest.impl;
+package com.nowellpoint.identity.rest;
 
 import java.util.Date;
 

@@ -1,4 +1,4 @@
-package com.nowellpoint.authentication.rest.impl;
+package com.nowellpoint.identity.rest;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,10 +23,10 @@ import org.jboss.logging.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nowellpoint.api.RegistrationResource;
-import com.nowellpoint.authentication.model.LogEntry;
-import com.nowellpoint.authentication.util.EnvironmentVariables;
-import com.nowellpoint.authentication.util.LocaleThreadLocal;
-import com.nowellpoint.authentication.util.UriInfoThreadLocal;
+import com.nowellpoint.api.model.LogEntry;
+import com.nowellpoint.identity.util.EnvironmentVariables;
+import com.nowellpoint.identity.util.LocaleThreadLocal;
+import com.nowellpoint.identity.util.UriInfoThreadLocal;
 
 @Provider
 public class ResourceRequestFilter implements ContainerRequestFilter, ContainerResponseFilter {
@@ -55,7 +55,7 @@ public class ResourceRequestFilter implements ContainerRequestFilter, ContainerR
 		final Long duration = System.currentTimeMillis() - startTime;
 		final Locale locale = httpRequest.getLocale() != null ? httpRequest.getLocale() : Locale.getDefault();
 		
-		LogEntry logEntry = LogEntry.builder()
+		LogEntry logEntry = com.nowellpoint.api.model.LogEntry.builder()
 				.statusCode(statusCode)
 				.statusInfo(statusInfo)
 				.requestMethod(requestMethod)

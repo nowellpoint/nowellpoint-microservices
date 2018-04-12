@@ -1,4 +1,4 @@
-package com.nowellpoint.authentication.util;
+package com.nowellpoint.identity.util;
 
 import java.util.Locale;
 

@@ -44,8 +44,6 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<fabric8.version>2.3.4</fabric8.version>
-		<fabric8.maven.plugin.version>3.5.19</fabric8.maven.plugin.version>
 		<version.war.plugin>2.6</version.war.plugin>
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 	</properties>
@@ -62,10 +60,6 @@
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
 			<artifactId>logging</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.wildfly.swarm</groupId>
-			<artifactId>management</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
@@ -181,6 +175,7 @@
 					<plugin>
 						<groupId>io.fabric8</groupId>
 						<artifactId>fabric8-maven-plugin</artifactId>
+						<version>${fabric8.maven.plugin.version}</version>
 						<configuration>
 							<generator>
 								<includes>
@@ -202,7 +197,7 @@
 									<SENDGRID_API_KEY>${env.SENDGRID_API_KEY}</SENDGRID_API_KEY>
 									<LOGGLY_API_ENDPOINT>${env.LOGGLY_API_ENDPOINT}</LOGGLY_API_ENDPOINT>
 									<LOGGLY_API_KEY>${env.LOGGLY_API_KEY}</LOGGLY_API_KEY>
-									<AB_ENABLED>off</AB_ENABLED>
+									<AB_PROMETHEUS_OFF>true</AB_PROMETHEUS_OFF>
 									<JAVA_OPTIONS>-Dswarm.project.stage=production</JAVA_OPTIONS>
 								</env>
 							</resources>

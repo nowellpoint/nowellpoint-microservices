@@ -1,5 +1,6 @@
 package com.nowellpoint.identity.rest;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.ws.rs.ForbiddenException;
 import javax.ws.rs.core.Context;
@@ -14,10 +15,11 @@ import com.nowellpoint.api.OrganizationResource;
 import com.nowellpoint.api.model.Identity;
 import com.nowellpoint.api.model.Organization;
 import com.nowellpoint.api.model.Resources;
-import com.nowellpoint.authentication.provider.DatastoreProvider;
+import com.nowellpoint.identity.entity.OrganizationDAO;
 import com.nowellpoint.identity.entity.OrganizationEntity;
 import com.nowellpoint.identity.entity.UserProfileDAO;
 import com.nowellpoint.identity.entity.UserProfileEntity;
+import com.nowellpoint.identity.provider.DatastoreProvider;
 import com.nowellpoint.util.Assert;
 
 public class IdentityResourceImpl implements IdentityResource {
@@ -29,6 +31,14 @@ public class IdentityResourceImpl implements IdentityResource {
 	private SecurityContext securityContext;
 	
 	private UserProfileDAO userProfileDAO;
+	
+	private OrganizationDAO organizationDAO;
+	
+	@PostConstruct
+	public void init() {
+		userProfileDAO = new UserProfileDAO(UserProfileEntity.class, datastoreProvider.getDatastore());
+		organizationDAO = new OrganizationDAO(OrganizationEntity.class, datastoreProvider.getDatastore());
+	}
 	
 	@Override
 	public Response getIdentity(String organizationId, String userId) {
@@ -97,6 +107,7 @@ public class IdentityResourceImpl implements IdentityResource {
 	}
 	
 	private OrganizationEntity findOrganization(String organizationId) {
-		return null;
+		OrganizationEntity entity = organizationDAO.findOne(organizationId, OrganizationEntity.class);
+		return entity;
 	}
 }

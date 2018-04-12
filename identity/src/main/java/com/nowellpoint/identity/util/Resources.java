@@ -1,4 +1,4 @@
-package com.nowellpoint.authentication.util;
+package com.nowellpoint.identity.util;
 
 import javax.enterprise.inject.Produces;
 import javax.enterprise.inject.spi.InjectionPoint;

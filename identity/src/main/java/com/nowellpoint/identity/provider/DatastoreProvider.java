@@ -1,4 +1,4 @@
-package com.nowellpoint.authentication.provider;
+package com.nowellpoint.identity.provider;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
@@ -10,8 +10,8 @@ import org.mongodb.morphia.Morphia;
 
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.nowellpoint.authentication.util.EnvironmentVariables;
 import com.nowellpoint.identity.entity.UserProfileEntity;
+import com.nowellpoint.identity.util.EnvironmentVariables;
 
 @Startup
 @Singleton

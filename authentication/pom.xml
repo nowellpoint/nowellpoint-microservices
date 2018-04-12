@@ -44,14 +44,10 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
-		<fabric8.version>2.3.4</fabric8.version>
-		<fabric8.maven.plugin.version>3.5.19</fabric8.maven.plugin.version>
 		<version.war.plugin>2.6</version.war.plugin>
 		<failOnMissingWebXml>false</failOnMissingWebXml>
 	</properties>
 	
-	
-
 	<dependencies>
 		<dependency>
 			<groupId>org.wildfly.swarm</groupId>
@@ -193,9 +189,9 @@
 									<OKTA_CLIENT_ID>${env.OKTA_CLIENT_ID}</OKTA_CLIENT_ID>
 									<OKTA_CLIENT_SECRET>${env.OKTA_CLIENT_SECRET}</OKTA_CLIENT_SECRET>
 									<OKTA_AUTHORIZATION_SERVER>${env.OKTA_AUTHORIZATION_SERVER}</OKTA_AUTHORIZATION_SERVER>
-									<LOGGLY_API_ENDPOINT>http://logs-01.loggly.com/inputs</LOGGLY_API_ENDPOINT>
+									<LOGGLY_API_ENDPOINT>${env.LOGGLY_API_URL}</LOGGLY_API_ENDPOINT>
 									<LOGGLY_API_KEY>${env.LOGGLY_API_KEY}</LOGGLY_API_KEY>
-									<AB_ENABLED>off</AB_ENABLED>
+									<AB_PROMETHEUS_OFF>true</AB_PROMETHEUS_OFF>
 									<JAVA_OPTIONS>-Dswarm.project.stage=production</JAVA_OPTIONS>
 								</env>
 							</resources>
