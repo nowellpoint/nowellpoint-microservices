@@ -1,4 +1,4 @@
-package com.nowellpoint.authentication.rest;
+package com.nowellpoint.registration;
 
 import javax.annotation.security.PermitAll;
 import javax.ws.rs.GET;

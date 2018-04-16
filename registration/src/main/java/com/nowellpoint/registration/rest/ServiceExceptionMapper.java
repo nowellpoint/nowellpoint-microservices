@@ -1,4 +1,4 @@
-package com.nowellpoint.registration.rest.impl;
+package com.nowellpoint.registration.rest;
 
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;

@@ -1,4 +1,4 @@
-package com.nowellpoint.authentication.rest.impl;
+package com.nowellpoint.authentication.rest;
 
 import java.util.Base64;
 

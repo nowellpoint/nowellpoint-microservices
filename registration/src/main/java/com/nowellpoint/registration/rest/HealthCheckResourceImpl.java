@@ -1,10 +1,10 @@
-package com.nowellpoint.registration.rest.impl;
+package com.nowellpoint.registration.rest;
 
 import java.util.Date;
 
 import org.wildfly.swarm.health.HealthStatus;
 
-import com.nowellpoint.registration.rest.HealthCheckResource;
+import com.nowellpoint.registration.HealthCheckResource;
 
 public class HealthCheckResourceImpl implements HealthCheckResource {
 	

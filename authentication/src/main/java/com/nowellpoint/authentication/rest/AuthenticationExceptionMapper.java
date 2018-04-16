@@ -16,7 +16,7 @@
  * 
  */
 
-package com.nowellpoint.authentication.rest.impl;
+package com.nowellpoint.authentication.rest;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;

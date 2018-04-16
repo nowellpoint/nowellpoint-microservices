@@ -51,7 +51,7 @@ public class ResourceRequestFilter implements ContainerRequestFilter, ContainerR
 		final String statusInfo = responseContext.getStatusInfo().toString();
 		final String requestMethod = requestContext.getMethod();
 		final String requestUri = uriInfo.getRequestUri().toString();
-		final Long startTime = Long.valueOf(httpRequest.getAttribute(START_TIME).toString());
+		final Long startTime = httpRequest.getAttribute(START_TIME) != null ? Long.valueOf(httpRequest.getAttribute(START_TIME).toString()) : System.currentTimeMillis(); 
 		final Long duration = System.currentTimeMillis() - startTime;
 		final Locale locale = httpRequest.getLocale() != null ? httpRequest.getLocale() : Locale.getDefault();
 		

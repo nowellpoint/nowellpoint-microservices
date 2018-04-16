@@ -1,10 +1,10 @@
-package com.nowellpoint.authentication.rest.impl;
+package com.nowellpoint.authentication.rest;
 
 import java.util.Date;
 
 import org.wildfly.swarm.health.HealthStatus;
 
-import com.nowellpoint.authentication.rest.HealthCheckResource;
+import com.nowellpoint.authentication.HealthCheckResource;
 
 public class HealthCheckResourceImpl implements HealthCheckResource {
 	

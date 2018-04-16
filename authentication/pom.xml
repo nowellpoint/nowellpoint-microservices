@@ -189,7 +189,7 @@
 									<OKTA_CLIENT_ID>${env.OKTA_CLIENT_ID}</OKTA_CLIENT_ID>
 									<OKTA_CLIENT_SECRET>${env.OKTA_CLIENT_SECRET}</OKTA_CLIENT_SECRET>
 									<OKTA_AUTHORIZATION_SERVER>${env.OKTA_AUTHORIZATION_SERVER}</OKTA_AUTHORIZATION_SERVER>
-									<LOGGLY_API_ENDPOINT>${env.LOGGLY_API_URL}</LOGGLY_API_ENDPOINT>
+									<LOGGLY_API_ENDPOINT>${env.LOGGLY_API_ENDPOINT}</LOGGLY_API_ENDPOINT>
 									<LOGGLY_API_KEY>${env.LOGGLY_API_KEY}</LOGGLY_API_KEY>
 									<AB_PROMETHEUS_OFF>true</AB_PROMETHEUS_OFF>
 									<JAVA_OPTIONS>-Dswarm.project.stage=production</JAVA_OPTIONS>
@@ -200,6 +200,7 @@
 							<execution>
 								<goals>
 									<goal>resource</goal>
+									<goal>helm</goal>
 									<goal>build</goal>
 								</goals>
 							</execution>
